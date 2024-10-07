@@ -8,6 +8,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { USER_API_END_POINT } from '../../../utils/constant';
 import { toast } from 'sonner';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../../../redux/authSlice';
 
 const Signup = () => {
     const [input, setInput] = useState({
@@ -18,6 +20,9 @@ const Signup = () => {
         role: "",
         file: ""
     });
+
+    const {Loading} = useSelector(store => store.auth);
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -44,6 +49,7 @@ const Signup = () => {
         }
 
         try {
+            dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -58,6 +64,8 @@ const Signup = () => {
         } catch (error) {
             console.log(error);
             toast.error('Signup failed. Please try again.');
+        } finally {
+            dispatch(setLoading(false));
         }
     };
 
@@ -142,7 +150,9 @@ const Signup = () => {
                             />
                         </div>
                     </div>
-                    <Button type="submit" className="w-full my-4">Sign Up</Button>
+                    {
+                        Loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin'/>Please Wait</Button> : <Button type="submit" className="w-full my-4">Sign Up</Button>
+                    }
                     <span className='flex gap-2 text-sm'>Already have an Account?<Link to="/login" className='text-blue-600'>Login</Link></span>
                 </form>
             </div>

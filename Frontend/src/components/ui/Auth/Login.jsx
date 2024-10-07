@@ -8,6 +8,10 @@ import axios from 'axios';
 import { USER_API_END_POINT } from '../../../utils/constant';
 import { toast } from 'sonner';
 import { RadioGroup } from '../../../../@/components/ui/radio-group';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading, setUser } from '../../../redux/authSlice';
+import { Loader2 } from 'lucide-react';
+
 
 const Login = () => {
     const [input, setInput] = useState({
@@ -15,7 +19,9 @@ const Login = () => {
         password: "", // Updated to match the input field names
     });
 
+    const { Loading } = useSelector(store => store.auth);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -27,15 +33,16 @@ const Login = () => {
             toast.error("Please fill in all fields.");
             return;
         }
-    
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(input.email)) {
             toast.error("Please enter a valid email address.");
             return;
         }
-        console.log(input);  // Check what data is being sent
-        
+        console.log(input);  
+
         try {
+            dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
                     "Content-Type": "application/json",
@@ -43,6 +50,7 @@ const Login = () => {
                 withCredentials: true,
             });
             if (res.data.success) {
+                dispatch(setUser(res.data.user))
                 navigate("/");
                 toast.success(res.data.message);
             } else {
@@ -55,6 +63,8 @@ const Login = () => {
             } else {
                 toast.error("An unexpected error occurred.");
             }
+        } finally {
+            dispatch(setLoading(false));
         }
     };
 
@@ -112,8 +122,9 @@ const Login = () => {
                             </div>
                         </RadioGroup>
                     </div>
-                    
-                    <Button type="submit" className="w-full my-2">Login</Button>
+                    {
+                        Loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin'/>Please Wait</Button> : <Button type="submit" className="w-full my-4">Login</Button>
+                    }
                     <span className='flex gap-2 text-sm'>Don't have an account? <Link to="/signup" className='text-blue-600'>Sign Up</Link></span>
                 </form>
             </div>
