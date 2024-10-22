@@ -62,10 +62,15 @@ const Signup = () => {
                 toast.success(res.data.message);
             }
         } catch (error) {
-            console.log(error);
-            toast.error('Signup failed. Please try again.');
-        } finally {
-            dispatch(setLoading(false));
+            if (error.response) {
+
+                console.error(error.response.data); 
+                toast.error(error.response.data.message || 'Bad Request: Please check your input');
+            } else {
+
+                console.error(error.message);
+                toast.error('An unexpected error occurred');
+            }
         }
     };
 
