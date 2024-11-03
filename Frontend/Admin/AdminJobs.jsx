@@ -2,39 +2,42 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../src/components/ui/Nav/Navbar';
 import { Input } from '../@/components/ui/input';
 import { Button } from '../@/components/ui/button';
-import CompaniesTable from './CompaniesTable';
 import { useNavigate } from 'react-router-dom';
-import useGetAllCompanies from '../src/hooks/useGetAllCompanies';
 import { useDispatch } from 'react-redux';
-import { setSearchCompanyByText } from '../src/redux/companySlice';
+import AdminJobsTable from './AdminJobsTable';
+import useGetAllCompanies from '../src/hooks/useGetAllCompanies';
+import { setSearchJobByText } from '../src/redux/jobSlice';
 
-const Companies = () => {
+
+
+const AdminJobs = () => {
     useGetAllCompanies();
     const [input, setInput] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setSearchCompanyByText(input));
+        console.log('Search Input:', input);
+        dispatch(setSearchJobByText(input));
     }, [input, dispatch]);
 
     return (
         <div>
             <Navbar />
             <div className='max-w-6xl mx-auto my-10'>
-                <div className='flex items-center justify-between my-5 mx-10'>
+                <div className='flex items-center justify-between my-5'>
                     <Input
-                        className="w-fit ml-4"
-                        placeholder="Filter by name"
+                        className="w-fit"
+                        placeholder="Filter by name or Role"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                     />
-                    <Button onClick={() => navigate("/admin/companies/create")} className='mr-2'>New Company</Button>
+                    <Button onClick={() => navigate("/admin/jobs/create")}>New Jobs</Button>
                 </div>
-                <CompaniesTable />
+                <AdminJobsTable />
             </div>
         </div>
     );
 }
 
-export default Companies;
+export default AdminJobs;

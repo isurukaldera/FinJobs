@@ -9,8 +9,11 @@ import { Input } from '../@/components/ui/input';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import useGetCompanyById from '../src/hooks/useGetCompanyById';
 
 const CompanySetup = () => {
+    const params = useParams();
+    useGetCompanyById(params.id);
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -18,20 +21,21 @@ const CompanySetup = () => {
         location: "",
         file: null,
     });
-    const {singleCompany} = useSelector(store=>store.company);
+    const { singleCompany } = useSelector(store => store.company);
     const [loading, setLoading] = useState(false);
-    const params = useParams();
     const navigate = useNavigate();
 
-        useEffect(() => {
+    useEffect(() => {
+        if (singleCompany) {
             setInput({
                 name: singleCompany.name || "",
                 description: singleCompany.description || "",
                 website: singleCompany.website || "",
                 location: singleCompany.location || "",
                 file: singleCompany.file || null
-            })
-        },[singleCompany]);
+            });
+        }
+    }, [singleCompany]);
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -44,36 +48,36 @@ const CompanySetup = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        
+
         if (!input.name || !input.description || !input.website || !input.location) {
             toast.error("Please fill out all fields before submitting.");
             return;
         }
-    
+
         const formData = new FormData();
         formData.append("name", input.name);
         formData.append("description", input.description);
         formData.append("website", input.website);
         formData.append("location", input.location);
-        
+
         if (input.file) {
             formData.append("file", input.file);
         }
-    
+
         try {
             setLoading(true);
             const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true
             });
-    
+
             if (res.data.success) {
                 toast.success(res.data.message || "Company updated successfully.");
                 navigate("/admin/companies");
             }
         } catch (error) {
-            console.error(error);
-            toast.error(error.response.data.message);
+            console.error('Error updating company:', error);
+            toast.error(error.response?.data?.message || "An error occurred while updating the company.");
         } finally {
             setLoading(false);
         }
@@ -82,8 +86,8 @@ const CompanySetup = () => {
     return (
         <div>
             <Navbar />
-            <div className='max-w-xl mx-auto my-10 p-5 border rounded-lg shadow-lg'>
-                <form onSubmit={submitHandler}>
+            <div className='flex items-center justify-center w-screen my-5'>
+                <form onSubmit={submitHandler} className='p-8 max-w-4xl w-full border border-gray-200 shadow-lg rounded-md'>
                     <div className='flex items-center gap-5 mb-6'>
                         <Button onClick={() => navigate("/admin/companies")} variant="outline" className="flex items-center gap-2 text-gray-500 font-semibold">
                             <span className="flex items-center"><ArrowLeft /></span>
@@ -97,6 +101,7 @@ const CompanySetup = () => {
                             <Input
                                 type="text"
                                 name="name"
+                                value={input.name}
                                 onChange={changeEventHandler}
                                 className="border rounded-md p-2 w-1/2"
                                 placeholder="Enter company name"
@@ -107,6 +112,7 @@ const CompanySetup = () => {
                             <Input
                                 type="text"
                                 name="description"
+                                value={input.description}
                                 onChange={changeEventHandler}
                                 className="border rounded-md p-2 w-1/2"
                                 placeholder="Enter description"
@@ -117,6 +123,7 @@ const CompanySetup = () => {
                             <Input
                                 type="text"
                                 name="website"
+                                value={input.website}
                                 onChange={changeEventHandler}
                                 className="border rounded-md p-2 w-1/2"
                                 placeholder="Enter website URL"
@@ -127,6 +134,7 @@ const CompanySetup = () => {
                             <Input
                                 type="text"
                                 name="location"
+                                value={input.location}
                                 onChange={changeEventHandler}
                                 className="border rounded-md p-2 w-1/2"
                                 placeholder="Enter location"
