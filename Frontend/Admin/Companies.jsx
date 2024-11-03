@@ -4,8 +4,10 @@ import { Input } from '../@/components/ui/input'
 import { Button } from '../@/components/ui/button'
 import CompaniesTable from './CompaniesTable'
 import { useNavigate } from 'react-router-dom'
+import useGetAllCompanies from '../src/hooks/useGetAllCompanies'
 
 const Companies = () => {
+    useGetAllCompanies();
     const navigate = useNavigate();
     return (
         <div>
