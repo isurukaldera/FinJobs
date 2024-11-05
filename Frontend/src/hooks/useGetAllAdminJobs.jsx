@@ -6,24 +6,22 @@ import { JOB_API_END_POINT } from "../utils/constant";
 
 const useGetAllAdminJobs = () => {
     const dispatch = useDispatch();
-
     useEffect(() => {
-        const fetchAllAdminJobs = async () => {
-            try {
-                const res = await axios.get(`${JOB_API_END_POINT}/getadminjobs`, { withCredentials: true });
-                console.log('Response:', res.data);
-                if (res.data.success) {
-                    dispatch(setAllAdminJobs(res.data.jobs));
-                } else {
-                    console.error('Failed to fetch jobs:', res.data.message);
-                }
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
-            }
-        };
-
-        fetchAllAdminJobs();
+      const fetchAllAdminJobs = async () => {
+        try {
+          const res = await axios.get(`${JOB_API_END_POINT}/getadminjobs`, { withCredentials: true });
+          console.log('Fetched Jobs:', res.data.jobs);
+          if (res.data.success) {
+            dispatch(setAllAdminJobs(res.data.jobs));
+          } else {
+            console.error('Failed to fetch jobs:', res.data.message);
+          }
+        } catch (error) {
+          console.error('Error fetching jobs:', error);
+        }
+      };
+      fetchAllAdminJobs();
     }, [dispatch]);
-};
-
+  };
+  
 export default useGetAllAdminJobs;

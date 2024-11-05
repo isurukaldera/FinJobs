@@ -9,27 +9,25 @@ import {
   TableRow,
 } from '../@/components/ui/table';
 import { Popover } from '@radix-ui/react-popover';
-import { Edit2, MoreHorizontal, Eye } from 'lucide-react'; // Ensure Eye is imported
+import { Edit2, MoreHorizontal, Eye } from 'lucide-react';
 import { PopoverContent, PopoverTrigger } from '../@/components/ui/popover';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const AdminJobsTable = () => { 
-    const { allAdminJobs = [], searchJobByText } = useSelector(store => store.job); // Initialize allAdminJobs as an empty array
+    const { allAdminJobs, searchJobByText } = useSelector(store => store.job);
     const [filterJobs, setFilterJobs] = useState(allAdminJobs);
     const navigate = useNavigate();
 
     useEffect(() => { 
-        console.log('called');
-        if (allAdminJobs.length > 0) {
-            const filteredJobs = allAdminJobs.filter((job) => {
-                if (!searchJobByText) {
-                    return true;
-                }
-                return job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) || job?.company?.name.toLowerCase().includes(searchJobByText.toLowerCase());
-            });
-            setFilterJobs(filteredJobs);
-        }
+        if (!allAdminJobs) return;
+        const filteredJobs = allAdminJobs.filter((job) => {
+            if (!searchJobByText) {
+                return true;
+            }
+            return job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) || job?.company?.name.toLowerCase().includes(searchJobByText.toLowerCase());
+        });
+        setFilterJobs(filteredJobs);
     }, [allAdminJobs, searchJobByText]);
 
     return (
@@ -47,7 +45,7 @@ const AdminJobsTable = () => {
                 <TableBody>
                     {
                         filterJobs?.map((job) => (
-                            <TableRow key={job._id}> {/* Ensure each row has a unique key */}
+                            <TableRow>
                                 <TableCell>{job?.company?.name}</TableCell>
                                 <TableCell>{job?.title}</TableCell>
                                 <TableCell>{job?.createdAt.split("T")[0]}</TableCell>
@@ -60,7 +58,7 @@ const AdminJobsTable = () => {
                                                 <span>Edit</span>
                                             </div>
                                             <div onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)} className='flex items-center w-fit gap-2 cursor-pointer mt-2'>
-                                                <Eye className='w-4' />
+                                                <Eye className='w-4'/>
                                                 <span>Applicants</span>
                                             </div>
                                         </PopoverContent>

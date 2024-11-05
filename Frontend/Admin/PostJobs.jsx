@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Navbar from '../src/components/ui/Nav/Navbar';
 import { Label } from '@radix-ui/react-label';
-import { Input } from '../@/components/ui/input'; // Correct import for Input
+import { Input } from '../@/components/ui/input';
 import { Button } from '../@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { JOB_API_END_POINT } from '../src/utils/constant';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@radix-ui/react-select';
+
 
 const PostJob = () => {
     const [input, setInput] = useState({
@@ -32,9 +33,14 @@ const PostJob = () => {
     };
 
     const selectChangeHandler = (value) => {
-        const selectedCompany = companies.find((company) => company.name.toLowerCase() === value);
-        setInput({ ...input, companyId: selectedCompany._id });
+        const selectedCompany = companies.find((company) => company._id === value);
+        if (selectedCompany) {
+            setInput({ ...input, companyId: selectedCompany._id });
+        } else {
+            console.error("Company not found for the selected value:", value);
+        }
     };
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -60,131 +66,129 @@ const PostJob = () => {
     return (
         <div>
             <Navbar />
-            <div className='flex items-center justify-center w-screen my-5'>
-                <form onSubmit={submitHandler} className='p-8 max-w-4xl w-full border border-gray-200 shadow-lg rounded-md'>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='flex items-center justify-center w-screen my-10'>
+                <form
+                    onSubmit={submitHandler}
+                    className='p-6 md:p-8 max-w-5xl border border-gray-300 shadow-lg rounded-lg bg-white'
+                >
+                    <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Post a New Job</h2>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
                         <div>
-                            <Label className='block mb-1 font-bold'>Title</Label>
+                            <Label className="text-sm font-medium text-gray-600">Title</Label>
                             <Input
                                 type="text"
                                 name="title"
                                 value={input.title}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter job title"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>Description</Label>
+                            <Label className="text-sm font-medium text-gray-600">Description</Label>
                             <Input
                                 type="text"
                                 name="description"
                                 value={input.description}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter job description"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>Requirements</Label>
+                            <Label className="text-sm font-medium text-gray-600">Requirements</Label>
                             <Input
                                 type="text"
                                 name="requirements"
                                 value={input.requirements}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter job requirements"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>Salary</Label>
+                            <Label className="text-sm font-medium text-gray-600">Salary (Numbers Only)</Label>
                             <Input
-                                type="text"
+                                type="number"
                                 name="salary"
                                 value={input.salary}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter salary"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>Location</Label>
+                            <Label className="text-sm font-medium text-gray-600">Location</Label>
                             <Input
                                 type="text"
                                 name="location"
                                 value={input.location}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter location"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>Job Type</Label>
-                            <Input
-                                type="text"
+                            <Label className="text-sm font-medium text-gray-600">Job Type</Label>
+                            <select
                                 name="jobType"
                                 value={input.jobType}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter job type"
-                            />
+                                className="w-full p-2 border rounded-md my-1 text-sm bg-white"
+                            >
+                                <option value="">Select Job Type</option>
+                                <option value="full-time">Full Time</option>
+                                <option value="part-time">Part Time</option>
+                            </select>
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>Experience Level</Label>
+                            <Label className="text-sm font-medium text-gray-600">Experience Level</Label>
                             <Input
                                 type="text"
                                 name="experience"
                                 value={input.experience}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter experience level"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
                         <div>
-                            <Label className='block mb-1 font-bold'>No of Positions</Label>
+                            <Label className="text-sm font-medium text-gray-600">No. of Positions</Label>
                             <Input
                                 type="number"
                                 name="position"
                                 value={input.position}
                                 onChange={changeEventHandler}
-                                className="border rounded-md p-2 w-full"
-                                placeholder="Enter number of positions"
+                                className="w-full p-2 border rounded-md my-1 text-sm"
                             />
                         </div>
-                        {
-                            companies.length > 0 && (
-                                <div className='col-span-1 md:col-span-2'>
-                                    <Label className='block mb-1 font-bold'>Select Company</Label>
-                                    <Select onValueChange={selectChangeHandler}>
-                                        <SelectTrigger className="w-full border rounded-md p-2">
-                                            <SelectValue placeholder="Select a Company" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {
-                                                    companies.map((company) => {
-                                                        return (
-                                                            <SelectItem key={company._id} value={company?.name?.toLowerCase()}>{company.name}</SelectItem>
-                                                        )
-                                                    })
-                                                }
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            )
-                        }
+                        {companies.length > 0 && (
+                            <div className="col-span-1 sm:col-span-2">
+                                <Label className="text-sm font-medium text-gray-600">Company</Label>
+                                <select
+                                    onChange={(e) => selectChangeHandler(e.target.value)}
+                                    className="w-full p-2 border rounded-md my-1 text-sm bg-white"
+                                >
+                                    <option value="">Select a Company</option>
+                                    {companies.map((company) => (
+                                        <option key={company._id} value={company._id}>
+                                            {company.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
                     </div>
-                    {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Post New Job</Button>
-                    }
-                    {
-                        companies.length === 0 && <p className='text-xs text-red-600 font-bold text-center my-3'>*Please register a company first, before posting a job</p>
-                    }
+                    {loading ? (
+                        <Button className="w-full my-4 flex items-center justify-center text-sm font-medium">
+                            <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
+                        </Button>
+                    ) : (
+                        <Button type="submit" className="w-full my-4 text-sm font-medium">Post New Job</Button>
+                    )}
+                    {companies.length === 0 && (
+                        <p className='text-xs text-red-600 font-bold text-center my-3'>
+                            *Please register a company first before posting a job
+                        </p>
+                    )}
                 </form>
             </div>
         </div>
-    )
+    );
 }
 
-export default PostJob;
+export default PostJob
