@@ -21,7 +21,7 @@ const Signup = () => {
         file: ""
     });
 
-    const {Loading} = useSelector(store => store.auth);
+    const { Loading } = useSelector(store => store.auth);
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -36,14 +36,14 @@ const Signup = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData();
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("password", input.password);
         formData.append("role", input.role);
-        
+
         if (input.file) {
             formData.append("file", input.file);
         }
@@ -64,7 +64,7 @@ const Signup = () => {
         } catch (error) {
             if (error.response) {
 
-                console.error(error.response.data); 
+                console.error(error.response.data);
                 toast.error(error.response.data.message || 'Bad Request: Please check your input');
             } else {
 
@@ -107,7 +107,8 @@ const Signup = () => {
                             value={input.phoneNumber}
                             name="phoneNumber"
                             onChange={changeEventHandler}
-                            placeholder="+35841787888"
+                            placeholder="41*******"
+                            onInput={(e) => e.target.value = e.target.value.replace(/\D/g, '')}
                         />
                     </div>
                     <div className='my-2'>
@@ -156,7 +157,7 @@ const Signup = () => {
                         </div>
                     </div>
                     {
-                        Loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin'/>Please Wait</Button> : <Button type="submit" className="w-full my-4">Sign Up</Button>
+                        Loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin' />Please Wait</Button> : <Button type="submit" className="w-full my-4">Sign Up</Button>
                     }
                     <span className='flex gap-2 text-sm'>Already have an Account?<Link to="/login" className='text-blue-600'>Login</Link></span>
                 </form>

@@ -104,7 +104,7 @@ const PostJob = () => {
                             />
                         </div>
                         <div>
-                            <Label className="text-sm font-medium text-gray-600">Salary (Numbers Only)</Label>
+                            <Label className="text-sm font-medium text-gray-600">Salary (€)</Label>
                             <Input
                                 type="number"
                                 name="salary"
@@ -137,13 +137,14 @@ const PostJob = () => {
                             </select>
                         </div>
                         <div>
-                            <Label className="text-sm font-medium text-gray-600">Experience Level</Label>
+                            <Label className="text-sm font-medium text-gray-600">Experience Level (Months)</Label>
                             <Input
                                 type="text"
                                 name="experience"
                                 value={input.experience}
                                 onChange={changeEventHandler}
                                 className="w-full p-2 border rounded-md my-1 text-sm"
+                                onInput={(e) => e.target.value = e.target.value.replace(/\D/g, '')}
                             />
                         </div>
                         <div>
