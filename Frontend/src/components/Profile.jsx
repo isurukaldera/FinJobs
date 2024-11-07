@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 const Profile = () => {
   const [open, setOpen] = useState(false);
   const { user } = useSelector(store => store.auth);
-  // Define isResume based on whether the user has a resume
+  
   const isResume = user?.profile?.resume ? true : false;
 
   return (

@@ -31,10 +31,10 @@ const AdminJobsTable = () => {
                 <TableCaption className="text-left text-lg font-semibold">A list of your recent posted jobs</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company Name</TableHead>
-                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</TableHead>
-                        <TableHead className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date</TableHead>
-                        <TableHead className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</TableHead>
+                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider font-bold">Company Name</TableHead>
+                        <TableHead className="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider font-bold">Role</TableHead>
+                        <TableHead className="px-6 py-3 text-center text-xs font-medium text-blue-500 uppercase tracking-wider font-bold">Date</TableHead>
+                        <TableHead className="px-6 py-3 text-right text-xs font-medium text-blue-500 uppercase tracking-wider font-bold">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody className="bg-white divide-y divide-gray-200">

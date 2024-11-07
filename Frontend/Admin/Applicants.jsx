@@ -8,31 +8,38 @@ import { setAllApplicants } from '../src/redux/applicationSlice';
 import ApplicantsTable from './ApplicantsTable';
 
 const Applicants = () => {
-    const params = useParams();
-    const dispatch = useDispatch();
-    const { applicants } = useSelector(store => store.application);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  
+  const { applicants } = useSelector((store) => store.application) || { applicants: [] };
 
-    useEffect(() => {
-        const fetchAllApplicants = async () => {
-            try {
-                const res = await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`, { withCredentials: true });
-                dispatch(setAllApplicants(res.data.job));
-            } catch (error) {
-                console.error("Error fetching applicants:", error);
-            }
-        };
-        fetchAllApplicants();
-    }, [params.id, dispatch]);
+  useEffect(() => {
+    const fetchAllApplicants = async () => {
+      try {
+        const res = await axios.get(`${APPLICATION_API_END_POINT}/${id}/applicants`, { withCredentials: true });
+        console.log('API Response:', res.data);
+        if (res.data.job) {
+          dispatch(setAllApplicants(res.data.job));  
+          console.log('Applicants set:', res.data.job); 
+        } else {
+          console.error('No job data found in response');
+        }
+      } catch (error) {
+        console.error("Error fetching applicants:", error);
+      }
+    };
+    fetchAllApplicants();
+  }, [id, dispatch]);
 
-    return (
-        <div>
-            <Navbar />
-            <div className='max-w-7xl mx-auto'>
-                <h1 className='font-bold text-xl my-5'>Applicants {applicants?.applications?.length || 0}</h1>
-                <ApplicantsTable />
-            </div>
+  return (
+    <div>
+        <Navbar />
+        <div className='max-w-7xl mx-auto'>
+            <h1 className='font-bold text-xl my-5'>Applicants {applicants?.applications?.length}</h1>
+            <ApplicantsTable />
         </div>
-    );
-};
+    </div>
+)
+}
 
-export default Applicants;
+export default Applicants
