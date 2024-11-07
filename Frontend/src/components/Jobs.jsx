@@ -16,7 +16,7 @@ const Jobs = () => {
                     job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
                     job.location.toLowerCase().includes(searchedQuery.toLowerCase());
             });
-            setFilterJobs(filteredJobs); // Corrected variable name
+            setFilterJobs(filteredJobs); 
         } else {
             setFilterJobs(allJobs);
         }
@@ -35,7 +35,7 @@ const Jobs = () => {
                             <div className='flex-1 h-[88vh] overflow-y-auto pb-5'>
                                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
                                     {
-                                        filterJobs.map((job) => ( // Corrected variable name
+                                        filterJobs.map((job) => ( 
                                             <motion.div
                                             initial={{ opacity: 0, x: 100 }}
                                             animate={{ opacity: 1, x: 0 }}
