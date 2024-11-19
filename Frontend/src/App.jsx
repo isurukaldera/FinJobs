@@ -7,7 +7,7 @@ import Jobs from './components/Jobs';
 import Browse from './components/Browse';
 import Profile from './components/Profile';
 import JobDescription from './components/JobDescription';
-import Companies from '../Admin/companies.jsx';
+import Companies from '../Admin/companies';
 import CompanyCreate from '../Admin/CompanyCreate';
 import CompanySetup from '../Admin/CompanySetup';
 import AdminJobs from '../Admin/AdminJobs';
