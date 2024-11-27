@@ -7,7 +7,7 @@ import Jobs from './components/Jobs';
 import Browse from './components/Browse';
 import Profile from './components/Profile';
 import JobDescription from './components/JobDescription';
-import Companies from './Admin/companies';
+import Companies from '@/Admin/Companies';
 import CompanyCreate from './Admin/CompanyCreate';
 import CompanySetup from './Admin/CompanySetup';
 import AdminJobs from './Admin/AdminJobs';
