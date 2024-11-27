@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import Navbar from '../src/components/ui/Nav/Navbar';
+import Navbar from '../components/ui/Nav/Navbar';
 import { Label } from '@radix-ui/react-label';
-import { Input } from '../@/components/ui/input';
-import { Button } from '../@/components/ui/button';
+import { Input } from '../../@/components/ui/input';
+import { Button } from '../../@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { JOB_API_END_POINT } from '../src/utils/constant';
+import { JOB_API_END_POINT } from '../utils/constant';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@radix-ui/react-select';
 
 

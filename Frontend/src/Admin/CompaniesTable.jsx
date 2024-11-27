@@ -7,11 +7,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../@/components/ui/table';
-import { Avatar, AvatarImage } from '../@/components/ui/avatar';
+} from '../../@/components/ui/table';
+import { Avatar, AvatarImage } from '../../@/components/ui/avatar';
 import { Popover } from '@radix-ui/react-popover';
 import { Edit2, MoreHorizontal } from 'lucide-react';
-import { PopoverContent, PopoverTrigger } from '../@/components/ui/popover';
+import { PopoverContent, PopoverTrigger } from '../../@/components/ui/popover';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 

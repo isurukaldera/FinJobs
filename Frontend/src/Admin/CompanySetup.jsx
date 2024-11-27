@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../src/components/ui/Nav/Navbar';
-import { Button } from '../@/components/ui/button';
+import Navbar from '../components/ui/Nav/Navbar';
+import { Button } from '../../@/components/ui/button';
 import { Label } from '@radix-ui/react-label';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { COMPANY_API_END_POINT } from '../src/utils/constant';
-import { Input } from '../@/components/ui/input';
+import { COMPANY_API_END_POINT } from '../utils/constant';
+import { Input } from '../../@/components/ui/input';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
-import useGetCompanyById from '../src/hooks/useGetCompanyById';
+import useGetCompanyById from '../hooks/useGetCompanyById';
 
 const CompanySetup = () => {
     const params = useParams();

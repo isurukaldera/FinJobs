@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import Navbar from '../src/components/ui/Nav/Navbar';
-import { Label } from '../@/components/ui/label';
-import { Input } from '../@/components/ui/input';
-import { Button } from '../@/components/ui/button';
+import Navbar from '../components/ui/Nav/Navbar';
+import { Label } from '../../@/components/ui/label';
+import { Input } from '../../@/components/ui/input';
+import { Button } from '../../@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { COMPANY_API_END_POINT } from '../src/utils/constant';
+import { COMPANY_API_END_POINT } from '../utils/constant';
 import { toast } from 'sonner';
 import { useDispatch } from 'react-redux';
-import { setSingleCompany } from '../src/redux/companySlice';
+import { setSingleCompany } from '../redux/companySlice';
 
 const CompanyCreate = () => {
     const navigate = useNavigate();

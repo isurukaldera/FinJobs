@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Navbar from '../src/components/ui/Nav/Navbar';
+import Navbar from '../components/ui/Nav/Navbar';
 import axios from 'axios';
-import { APPLICATION_API_END_POINT } from '../src/utils/constant';
-import { setAllApplicants } from '../src/redux/applicationSlice';
+import { APPLICATION_API_END_POINT } from '../utils/constant';
+import { setAllApplicants } from '../redux/applicationSlice';
 import ApplicantsTable from './ApplicantsTable';
 
 const Applicants = () => {

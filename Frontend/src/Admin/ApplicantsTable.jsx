@@ -1,11 +1,11 @@
 import React from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../@/components/ui/table'; 
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../../@/components/ui/table'; 
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'; 
 import { MoreHorizontal } from 'lucide-react'; 
 import { useSelector } from 'react-redux'; 
 import { toast } from 'sonner'; 
 import axios from 'axios'; 
-import { APPLICATION_API_END_POINT } from '../src/utils/constant';
+import { APPLICATION_API_END_POINT } from '../utils/constant';
 
 const shortlistingStatus = ["Accepted", "Rejected"];
 

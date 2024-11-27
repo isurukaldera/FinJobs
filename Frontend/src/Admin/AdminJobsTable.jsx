@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../@/components/ui/table';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../../@/components/ui/table';
 import { Popover } from '@radix-ui/react-popover';
 import { Edit2, MoreHorizontal, Eye } from 'lucide-react';
-import { PopoverContent, PopoverTrigger } from '../@/components/ui/popover';
+import { PopoverContent, PopoverTrigger } from '../../@/components/ui/popover';
 import { useNavigate } from 'react-router-dom';
 
 const AdminJobsTable = () => {
