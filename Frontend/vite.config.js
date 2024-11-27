@@ -10,9 +10,9 @@ export default defineConfig({
       
     },
   },
-  server: {
-    host: '0.0.0.0',  // Bind to all network interfaces
-    port: process.env.PORT || 5173,  // Use the port provided by Render (or 5173 by default)
-  },
+  //server: {
+    //host: '0.0.0.0', 
+    //port: process.env.PORT || 5173,  // Use the port provided by Render (or 5173 by default)
+  //},
 
 })
