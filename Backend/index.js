@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOption = {
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', // Allows dynamic origin for deployment
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
     credentials: true
 };
 

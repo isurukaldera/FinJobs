@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "start": "",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "host": "vite --host"
+    
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.1",
