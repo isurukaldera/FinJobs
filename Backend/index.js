@@ -23,7 +23,7 @@ const corsOption = {
 
 app.use(cors(corsOption));
 
-const PORT = process.env.PORT || 'https://finjobs-1.onrender.com';
+const PORT = process.env.PORT || 3000;
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/company", companyRoutes);
