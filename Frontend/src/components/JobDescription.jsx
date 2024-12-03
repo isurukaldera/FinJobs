@@ -22,6 +22,7 @@ const JobDescription = () => {
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
+                console.log('ErrorFinding',)
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job));
@@ -38,10 +39,11 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-
+        console.log( 'appliedjobHandeler', isApplied )
         if (isApplied) return; 
 
         try {
+            console.log('Find error', isApplied)
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
             if (res.data.success) {
                 const updatedSingleJob = {
