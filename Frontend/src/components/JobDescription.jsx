@@ -38,9 +38,7 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        console.log(
-            ('appliedjobHandeler', isApplied)
-        )
+        console.log( 'appliedjobHandeler', isApplied )
         if (isApplied) return; 
 
         try {
