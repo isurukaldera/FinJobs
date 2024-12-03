@@ -45,7 +45,7 @@ const JobDescription = () => {
 
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            console.log('Fetching Details ...')
+            console.log('Fetching Details ...', {res, jobId, apindpoint:APPLICATION_API_END_POINT})
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
