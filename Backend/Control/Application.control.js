@@ -2,6 +2,10 @@ import { Application } from "../models/application.models.js";
 import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
+    return res.status(200).json({
+        message:"Hlello world",
+        success:true
+    })
     try {
         const userId = req.id;
         const jobId = req.params.id;
