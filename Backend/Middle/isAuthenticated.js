@@ -1,28 +1,26 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import jwt from "jsonwebtoken";
 
-dotenv.config();
-
-const isAuthenticated = (req, res, next) => {
-    const token = req.cookies.token || req.headers['x-auth-token'];
-
-    if (!token) {
-        return res.status(401).json({
-            message: "Authorization token missing",
-            success: false
-        });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.id = decoded.id;
-        next();
-    } catch (error) {
-        return res.status(401).json({
-            message: "Invalid or expired token",
-            success: false
-        });
-    }
-};
-
+const isAuthenticated = async (req, res, next) => next();
+    // {
+    // try {
+    //     const token = req.cookies.token;
+    //     if (!token) {
+    //         return res.status(401).json({
+    //             message: "User not authenticated",
+    //             success: false,
+    //         })
+    //     }
+    //     const decode = await jwt.verify(token, process.env.SECRET_KEY);
+    //     if(!decode){
+    //         return res.status(401).json({
+    //             message:"Invalid token",
+    //             success:false
+    //         })
+    //     };
+    //     req.id = decode.userId;
+    //     next();
+    // } catch (error) {
+    //     console.log(error);
+    // }
+//}
 export default isAuthenticated;
