@@ -45,7 +45,7 @@ const JobDescription = () => {
 
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            console.log('Fetching Details ...', {res, jobId, apindpoint:APPLICATION_API_END_POINT})
+            console.log('Fetching Details ...',)
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
@@ -54,7 +54,10 @@ const JobDescription = () => {
                 dispatch(setSingleJob(updatedSingleJob));
                 setIsApplied(true); 
                 toast.success(res.data.message);
+            } else {
+                console.error('API did not return success:', res.data.message);
             }
+            
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'An error occurred while applying';
             toast.error(errorMessage);
