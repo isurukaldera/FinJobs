@@ -16,16 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-import cors from "cors";
+const corsOption = {
+    origin: process.env.CLIENT_ORIGIN || 'https://finjobs.onrender.com',
+    credentials: true
+};
 
-app.use(cors({
-    origin: "https://finjobs.onrender.com", 
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-}));
-
-
-app.use(cors);
+app.use(cors(corsOption));
 
 const PORT = process.env.PORT || 3000;
 
