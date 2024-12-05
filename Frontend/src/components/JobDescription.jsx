@@ -46,7 +46,7 @@ const JobDescription = () => {
         try {
             console.log("Job ID: ", jobId);
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            console.log('Fetching Details ...',)
+            console.log('Fetching Details ...',res)
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
@@ -56,6 +56,7 @@ const JobDescription = () => {
                 setIsApplied(true); 
                 toast.success(res.data.message);
             }
+            else console.log("failed", res)
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'An error occurred while applying';
             toast.error(errorMessage);
