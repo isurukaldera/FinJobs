@@ -46,8 +46,8 @@ const JobDescription = () => {
         console.log('Attempting to apply for job:', jobId);
 
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            console.log('API Response:', res.data);
+            const res = await axios.get("https://finjobs-1.onrender.com/api/v1/application/apply/jobId", { withCredentials: true });
+
 
             if (res.data.success) {
                 const updatedSingleJob = {
