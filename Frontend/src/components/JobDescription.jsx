@@ -53,7 +53,7 @@ const JobDescription = () => {
                 { applicant: user?._id },
                 {
                     headers: {
-                        Authorization: `Bearer ${toke}n`, // Corrected string interpolation for the token
+                        Authorization: `Bearer ${token}`, // Corrected string interpolation for the token
                     },
                     withCredentials: true, // Ensure this is inside the same config object
                 }
