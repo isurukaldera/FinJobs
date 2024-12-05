@@ -42,7 +42,7 @@ export const applyJob = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log("Error is in here", error.message);
+        console.log("Error is in here", {error});
         return res.status(500).json({
             message: "Internal Server Error.",
             error: error.message,
