@@ -23,7 +23,12 @@ const JobDescription = () => {
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,  // Set Bearer token in the Authorization header
+                    },
+                    withCredentials: true  // Send cookies with the request, if needed
+                });
                 console.log('Fetching Details ...')
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job));
