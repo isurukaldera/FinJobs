@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 const JobDescription = () => {
     const params = useParams();
     const jobId = params.id;
-    const token = localStorage.getItem('token');
+
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
     const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
@@ -23,13 +23,20 @@ const JobDescription = () => {
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
+                const token = localStorage.getItem('token'); // Get token from localStorage
+                if (!token) {
+                    toast.error('Authentication token is missing.');
+                    return;
+                }
+
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,  // Set Bearer token in the Authorization header
                     },
                     withCredentials: true  // Send cookies with the request, if needed
                 });
-                console.log('Fetching Details ...')
+
+                console.log('Fetching Details ...');
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job));
 
@@ -37,7 +44,8 @@ const JobDescription = () => {
                     setIsApplied(alreadyApplied);
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching job:', error.response || error.message);
+                toast.error('Failed to fetch job details.');
             }
         };
 
@@ -48,15 +56,20 @@ const JobDescription = () => {
         if (isApplied) return;  // Prevent double submission
 
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                toast.error('You need to log in to apply.');
+                return;
+            }
+
             const res = await axios.post(
-                `${APPLICATION_API_END_POINT}/apply/${jobId}`, 
-                { applicant: user?._id },
+                `${APPLICATION_API_END_POINT}/apply`,
+                { jobId },
                 {
                     headers: {
-                        Authorization: "Bearer <valid_jwt_token>",  // Ensure token is passed correctly
+                        Authorization: `Bearer ${token}`,  // Properly formatted token
                     },
-                    Authorization: "Bearer <valid_jwt_token>",
-                    withCredentials: true,
+                    withCredentials: true  // To include cookies if needed
                 }
             );
 
@@ -71,11 +84,12 @@ const JobDescription = () => {
                 setIsApplied(true);  // Mark as applied
                 toast.success(res.data.message);  // Show success message
             } else {
-                console.log("Application failed:", res);
+                console.log('Application failed:', res);
+                toast.error('Failed to apply for the job.');
             }
         } catch (error) {
-            console.error("Error applying to job:", error.response || error.message);
-            const errorMessage = error.response?.data?.message || 'An error occurred while applying';
+            console.error('Error applying to job:', error.response || error.message);
+            const errorMessage = error.response?.data?.message || 'An error occurred while applying.';
             toast.error(errorMessage);
         }
     };
@@ -97,7 +111,7 @@ const JobDescription = () => {
                         </Badge>
                     </div>
                 </div>
-                <Button 
+                <Button
                     onClick={isApplied ? null : applyJobHandler}
                     disabled={isApplied}
                     className={`rounded-lg px-4 py-2 ${isApplied ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#7209b7] hover:bg-[#5f32ad] transition duration-300'}`}>
