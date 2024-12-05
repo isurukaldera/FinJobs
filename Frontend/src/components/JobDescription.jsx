@@ -14,18 +14,20 @@ const JobDescription = () => {
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
     const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
-
+    
     const [isApplied, setIsApplied] = useState(isInitiallyApplied);
-
+    
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
+                
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
-                console.log('Fetching Details ...');
+                console.log('Fetching Details ...')
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job));
+
                     const alreadyApplied = res.data.job.applications?.some(application => application.applicant === user?._id) || false;
                     setIsApplied(alreadyApplied);
                 }
@@ -38,39 +40,24 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        if (isApplied) {
-            console.log('User has already applied.');
-            return;
-        }
-    
-        console.log('Attempting to apply for job:', jobId);
-    
+        console.log( 'appliedjobHandeler', isApplied )
+        if (isApplied) return; 
+
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            console.log('API Response:', res.data);
-    
+            console.log('Fetching Details ...',)
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
                     applications: [...singleJob.applications, { applicant: user?._id }],
                 };
                 dispatch(setSingleJob(updatedSingleJob));
-                setIsApplied(true);
+                setIsApplied(true); 
                 toast.success(res.data.message);
-            } else {
-                toast.error(res.data.message || "Failed to apply.");
             }
         } catch (error) {
-            if (error.response) {
-                console.error("API error response:", error.response.data);
-                toast.error(error.response.data?.message || "API error occurred");
-            } else if (error.request) {
-                console.error("API request failed:", error.request);
-                toast.error("API request failed. Check server connection.");
-            } else {
-                console.error("Unknown error:", error.message);
-                toast.error("An unknown error occurred.");
-            }
+            const errorMessage = error.response?.data?.message || 'An error occurred while applying';
+            toast.error(errorMessage);
         }
     };
 
@@ -91,7 +78,7 @@ const JobDescription = () => {
                         </Badge>
                     </div>
                 </div>
-                <Button
+                <Button 
                     onClick={isApplied ? null : applyJobHandler}
                     disabled={isApplied}
                     className={`rounded-lg px-4 py-2 ${isApplied ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#7209b7] hover:bg-[#5f32ad] transition duration-300'}`}>
