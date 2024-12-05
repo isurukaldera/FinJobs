@@ -15,15 +15,14 @@ const JobDescription = () => {
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
     const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
-    
+
     const [isApplied, setIsApplied] = useState(isInitiallyApplied);
-    
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
-                
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
                 console.log('Fetching Details ...')
                 if (res.data.success) {
@@ -43,10 +42,10 @@ const JobDescription = () => {
     const applyJobHandler = async () => {
         console.log('applyJobHandler triggered. isApplied:', isApplied);
         if (isApplied) return;  // Prevent double submission
-    
+
         try {
             console.log("Job ID:", jobId);
-            
+
             // Send POST request with applicant data (user._id)
             const res = await axios.post(
                 `${APPLICATION_API_END_POINT}/apply/${jobId}`, 
@@ -58,9 +57,9 @@ const JobDescription = () => {
                     withCredentials: true, // Ensure this is inside the same config object
                 }
             );
-            
+
             console.log('Response:', res.data);
-            
+
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
@@ -78,7 +77,7 @@ const JobDescription = () => {
             toast.error(errorMessage);
         }
     };
-    
+
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>
             <div className='flex items-center justify-between mb-6'>
