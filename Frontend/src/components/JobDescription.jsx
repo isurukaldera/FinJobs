@@ -48,11 +48,16 @@ const JobDescription = () => {
             
             // Send POST request with applicant data (user._id)
             const res = await axios.post(
-                `${APPLICATION_API_END_POINT}/apply/${jobId}`, // Backend API endpoint
-                { applicant: user?._id }, // Send applicant info as body data
-                { withCredentials: true }  // Ensure cookies or session are passed
+                `${APPLICATION_API_END_POINT}/apply/${jobId}`, 
+                { applicant: user?._id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Corrected string interpolation for the token
+                    },
+                    withCredentials: true, // Ensure this is inside the same config object
+                }
             );
-    
+            
             console.log('Response:', res.data);
             
             if (res.data.success) {
