@@ -14,6 +14,13 @@ export const applyJob = async (req, res) => {
             });
         }
 
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found",
+                success: false
+            });
+        }
 
         const existingApplication = await Application.findOne({ job: jobId, applicant: userId });
         if (existingApplication) {
@@ -24,13 +31,6 @@ export const applyJob = async (req, res) => {
         }
 
 
-        const job = await Job.findById(jobId);
-        if (!job) {
-            return res.status(404).json({
-                message: "Job not found",
-                success: false
-            });
-        }
 
 
         const newApplication = await Application.create({
