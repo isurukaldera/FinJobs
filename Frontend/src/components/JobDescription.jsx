@@ -14,15 +14,15 @@ const JobDescription = () => {
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
     const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
-    
+
     const [isApplied, setIsApplied] = useState(isInitiallyApplied);
-    
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
-                
+
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
                 console.log('Fetching Details ...')
                 if (res.data.success) {
@@ -40,27 +40,31 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        console.log( 'appliedjobHandeler', isApplied )
-        if (isApplied) return; 
+        if (isApplied) {
+            console.log('User has already applied.');
+            return;
+        }
+
+        console.log('Attempting to apply for job:', jobId);
 
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
             console.log('API Response:', res.data);
+
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
                     applications: [...singleJob.applications, { applicant: user?._id }],
                 };
                 dispatch(setSingleJob(updatedSingleJob));
-                setIsApplied(true); 
+                setIsApplied(true);
                 toast.success(res.data.message);
             } else {
-                console.error('API did not return success:', res.data.message);
+                toast.error(res.data.message || "Failed to apply.");
             }
-            
         } catch (error) {
-            const errorMessage = error.response?.data?.message || 'An error occurred while applying';
-            toast.error(errorMessage);
+            console.error('Error during applyJobHandler:', error.response?.data || error.message);
+            toast.error(error.response?.data?.message || "An error occurred.");
         }
     };
 
@@ -81,7 +85,7 @@ const JobDescription = () => {
                         </Badge>
                     </div>
                 </div>
-                <Button 
+                <Button
                     onClick={isApplied ? null : applyJobHandler}
                     disabled={isApplied}
                     className={`rounded-lg px-4 py-2 ${isApplied ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#7209b7] hover:bg-[#5f32ad] transition duration-300'}`}>
