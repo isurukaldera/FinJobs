@@ -25,7 +25,7 @@ app.use(cors({
 }));
 
 
-app.use(cors(corsOption));
+app.use(cors);
 
 const PORT = process.env.PORT || 3000;
 
