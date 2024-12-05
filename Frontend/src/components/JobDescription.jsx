@@ -40,8 +40,7 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        console.log( 'appliedjobHandeler', isApplied )
-        if (isApplied) return; 
+        
 
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
