@@ -63,9 +63,17 @@ const JobDescription = () => {
                 toast.error(res.data.message || "Failed to apply.");
             }
         } catch (error) {
-            console.error('Error during applyJobHandler:', error.response?.data || error.message);
-            toast.error(error.response?.data?.message || "An error occurred.");
-        }
+            if (error.response) {
+              console.error("API error response:", error.response.data);
+              toast.error(error.response.data?.message || "API error occurred");
+            } else if (error.request) {
+              console.error("API request failed:", error.request);
+              toast.error("API request failed. Check server connection.");
+            } else {
+              console.error("Unknown error:", error.message);
+              toast.error("An unknown error occurred.");
+            }
+          }
     };
 
     return (
