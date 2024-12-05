@@ -2,12 +2,9 @@ import { Application } from "../models/application.models.js";
 import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
-    return res.status(200).json({
-        message:"Hlello world",
-        success:true
-    })
     try {
         const userId = req.id;
+        console.log("User ID:", userId);
         const jobId = req.params.id;
         if (!jobId) {
             return res.status(400).json({
@@ -15,17 +12,18 @@ export const applyJob = async (req, res) => {
                 success: false
             })
         };
-
+        console.log("Checking for existing application...")
         const existingApplication = await Application.findOne({ job: jobId, applicant: userId });
 
         if (existingApplication) {
+            console.log("User has already applied for this job.");
             return res.status(400).json({
                 message: "You have already applied for this jobs",
                 success: false
             });
         }
 
-
+        console.log("Fetching job details...");
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({
@@ -34,11 +32,14 @@ export const applyJob = async (req, res) => {
             })
         }
 
+        console.log("Creating new application...");
         const newApplication = await Application.create({
             job:jobId,
             applicant:userId,
         });
+        
 
+        console.log("Adding application to job's application list...");
         job.applications.push(newApplication._id);
         await job.save();
         return res.status(201).json({
