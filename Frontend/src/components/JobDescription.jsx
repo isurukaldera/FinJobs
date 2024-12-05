@@ -53,46 +53,34 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        if (isApplied) return;  // Prevent double submission
+        if (isApplied) {
+            console.log('User has already applied.');
+            return;
+        }
+
+        console.log('Attempting to apply for job:', jobId);
 
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('You need to log in to apply.');
-                return;
-            }
-
-            const res = await axios.post(
-                `${APPLICATION_API_END_POINT}/apply`,
-                { jobId },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,  // Properly formatted token
-                    },
-                    withCredentials: true  // To include cookies if needed
-                }
-            );
-
-            console.log('Response:', res.data);
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
+            console.log('API Response:', res.data);
 
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
                     applications: [...singleJob.applications, { applicant: user?._id }],
                 };
-                dispatch(setSingleJob(updatedSingleJob)); // Update the job state
-                setIsApplied(true);  // Mark as applied
-                toast.success(res.data.message);  // Show success message
+                dispatch(setSingleJob(updatedSingleJob));
+                setIsApplied(true);
+                toast.success(res.data.message);
             } else {
-                console.log('Application failed:', res);
-                toast.error('Failed to apply for the job.');
+                toast.error(res.data.message || "Failed to apply.");
             }
         } catch (error) {
-            console.error('Error applying to job:', error.response || error.message);
-            const errorMessage = error.response?.data?.message || 'An error occurred while applying.';
-            toast.error(errorMessage);
+            console.error('Error during applyJobHandler:', error.response?.data || error.message);
+            toast.error(error.response?.data?.message || "An error occurred.");
         }
     };
+
 
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>
