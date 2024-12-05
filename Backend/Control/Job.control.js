@@ -64,20 +64,40 @@ export const getAllJobs = async (req, res) => {
 export const getJobById = async (req, res) => {
     try {
         const jobId = req.params.id;
+
+        // Validate that jobId is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            return res.status(400).json({
+                message: "Invalid job ID format.",
+                success: false
+            });
+        }
+
+        // Proceed with the query if the jobId is valid
         const job = await Job.findById(jobId).populate({
-            path:"applications"
+            path: "applications"
         });
+
         if (!job) {
             return res.status(404).json({
-                message: "Jobs not found.",
+                message: "Job not found.",
                 success: false
-            })
-        };
-        return res.status(200).json({ job, success: true });
+            });
+        }
+
+        return res.status(200).json({
+            job,
+            success: true
+        });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Internal Server Error.",
+            success: false,
+            error: error.message
+        });
     }
-}
+};
 
 export const getAdminJobs = async (req, res) => {
     try {
