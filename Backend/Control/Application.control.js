@@ -3,61 +3,57 @@ import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
     try {
-        const userId = req.id;
+      
+        const userId = req.user._id;  
         const jobId = req.params.id;
+
         if (!jobId) {
             return res.status(400).json({
-                message: "Job id is required.",
+                message: "Job ID is required.",
                 success: false
-            })
-        };
+            });
+        }
+
 
         const existingApplication = await Application.findOne({ job: jobId, applicant: userId });
-
-        console.log({existingApplication})
-
         if (existingApplication) {
             return res.status(400).json({
-                message: "You have already applied for this jobs",
+                message: "You have already applied for this job",
                 success: false
             });
         }
 
 
         const job = await Job.findById(jobId);
-
-        console.log({job})
-
         if (!job) {
             return res.status(404).json({
                 message: "Job not found",
                 success: false
-            })
+            });
         }
+
 
         const newApplication = await Application.create({
             job: jobId,
             applicant: userId,
         });
 
-        console.log({newApplication})
 
         job.applications.push(newApplication._id);
-
-        
         await job.save();
+
         return res.status(201).json({
             message: "Job applied successfully.",
-            success: true
-        })
+            success: true,
+            application: newApplication  
+        });
     } catch (error) {
-        console.log("Error is in here", {error});
+        console.log("Error is in here", { error });
         return res.status(500).json({
             message: "Internal Server Error.",
             error: error.message,
             success: false,
-
-        })
+        });
     }
 };
 export const getAppliedJobs = async (req, res) => {

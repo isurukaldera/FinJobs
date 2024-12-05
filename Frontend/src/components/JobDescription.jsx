@@ -40,29 +40,39 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        console.log( 'appliedjobHandeler', isApplied )
-        if (isApplied) return; 
-
+        console.log('applyJobHandler triggered. isApplied:', isApplied);
+        if (isApplied) return;  // Prevent double submission
+    
         try {
-            console.log("Job ID: ", jobId);
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            console.log('Fetching Details ...',res)
+            console.log("Job ID:", jobId);
+            
+            // Send POST request with applicant data (user._id)
+            const res = await axios.post(
+                `${APPLICATION_API_END_POINT}/apply/${jobId}`, // Backend API endpoint
+                { applicant: user?._id }, // Send applicant info as body data
+                { withCredentials: true }  // Ensure cookies or session are passed
+            );
+    
+            console.log('Response:', res.data);
+            
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
                     applications: [...singleJob.applications, { applicant: user?._id }],
                 };
-                dispatch(setSingleJob(updatedSingleJob));
-                setIsApplied(true); 
-                toast.success(res.data.message);
+                dispatch(setSingleJob(updatedSingleJob)); // Update the job state
+                setIsApplied(true);  // Mark as applied
+                toast.success(res.data.message);  // Show success message
+            } else {
+                console.log("Application failed:", res);
             }
-            else console.log("failed", res)
         } catch (error) {
+            console.error("Error applying to job:", error.response || error.message);
             const errorMessage = error.response?.data?.message || 'An error occurred while applying';
             toast.error(errorMessage);
         }
     };
-
+    
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>
             <div className='flex items-center justify-between mb-6'>
