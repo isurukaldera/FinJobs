@@ -40,21 +40,17 @@ const JobDescription = () => {
     }, [jobId, dispatch, user?._id]);
 
     const applyJobHandler = async () => {
-        console.log('applyJobHandler triggered. isApplied:', isApplied);
         if (isApplied) return;  // Prevent double submission
 
         try {
-            console.log("Job ID:", jobId);
-
-            // Send POST request with applicant data (user._id)
             const res = await axios.post(
                 `${APPLICATION_API_END_POINT}/apply/${jobId}`, 
                 { applicant: user?._id },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Corrected string interpolation for the token
+                        Authorization: `Bearer ${token}`,  // Ensure token is passed correctly
                     },
-                    withCredentials: true, // Ensure this is inside the same config object
+                    withCredentials: true,
                 }
             );
 
