@@ -53,8 +53,9 @@ const JobDescription = () => {
                 { applicant: user?._id },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,  // Ensure token is passed correctly
+                        Authorization: "Bearer <valid_jwt_token>",  // Ensure token is passed correctly
                     },
+                    Authorization: "Bearer <valid_jwt_token>",
                     withCredentials: true,
                 }
             );
