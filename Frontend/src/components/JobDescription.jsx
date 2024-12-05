@@ -42,13 +42,13 @@ const JobDescription = () => {
             console.log('User has already applied.');
             return;
         }
-
+    
         console.log('Attempting to apply for job:', jobId);
-
+    
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
             console.log('API Response:', res.data);
-
+    
             if (res.data.success) {
                 const updatedSingleJob = {
                     ...singleJob,
