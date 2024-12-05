@@ -22,12 +22,10 @@ const JobDescription = () => {
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
-
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
-                console.log('Fetching Details ...')
+                console.log('Fetching Details ...');
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job));
-
                     const alreadyApplied = res.data.job.applications?.some(application => application.applicant === user?._id) || false;
                     setIsApplied(alreadyApplied);
                 }
@@ -64,16 +62,16 @@ const JobDescription = () => {
             }
         } catch (error) {
             if (error.response) {
-              console.error("API error response:", error.response.data);
-              toast.error(error.response.data?.message || "API error occurred");
+                console.error("API error response:", error.response.data);
+                toast.error(error.response.data?.message || "API error occurred");
             } else if (error.request) {
-              console.error("API request failed:", error.request);
-              toast.error("API request failed. Check server connection.");
+                console.error("API request failed:", error.request);
+                toast.error("API request failed. Check server connection.");
             } else {
-              console.error("Unknown error:", error.message);
-              toast.error("An unknown error occurred.");
+                console.error("Unknown error:", error.message);
+                toast.error("An unknown error occurred.");
             }
-          }
+        }
     };
 
     return (
