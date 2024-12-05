@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 const JobDescription = () => {
     const params = useParams();
     const jobId = params.id;
+    const token = localStorage.getItem('token');
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
     const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
@@ -52,7 +53,7 @@ const JobDescription = () => {
                 { applicant: user?._id },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Corrected string interpolation for the token
+                        Authorization: `Bearer ${toke}n`, // Corrected string interpolation for the token
                     },
                     withCredentials: true, // Ensure this is inside the same config object
                 }
