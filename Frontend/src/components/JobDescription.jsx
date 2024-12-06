@@ -59,25 +59,24 @@ const JobDescription = () => {
             return;
         }
 
+        console.log('Attempting to apply for job:', jobId);
+
         try {
-            const token = localStorage.getItem('token'); // Get the token from localStorage
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
             if (!token) {
                 toast.error("Authentication token is missing. Please log in.");
                 return;
             }
 
-            const res = await axiosInstance.get(
-                `${APPLICATION_API_END_POINT}/apply/${jobId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Include the token in Authorization header
-                    },
-                    withCredentials: true, // Optional: Include cookies if needed
-                }
-            );
+            const response = await axiosInstance.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Set the token in the headers
+                },
+                withCredentials: true, // Optional: for cookies
+            });
 
-            console.log('API Response:', res.data);
+            console.log('API Response:', response.data);
 
             if (res.data.success) {
                 const updatedSingleJob = {
