@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setUser } from '../../../redux/authSlice';
 import { Loader2 } from 'lucide-react';
 
-
 const Login = () => {
     const [input, setInput] = useState({
         email: "",
@@ -47,11 +46,18 @@ const Login = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                withCredentials: true,
+                withCredentials: true,  // Keep credentials if needed
             });
             if (res.data.success) {
-                dispatch(setUser(res.data.user))
+                // Save the token to localStorage
+                localStorage.setItem("token", res.data.token);
+                
+                // Save the user data (optional)
+                dispatch(setUser(res.data.user));
+
+                // Redirect user after successful login
                 navigate("/");
+
                 toast.success(res.data.message);
             } else {
                 toast.error(res.data.message);
