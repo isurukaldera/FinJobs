@@ -16,7 +16,7 @@ const Applicants = () => {
   useEffect(() => {
     const fetchAllApplicants = async () => {
       try {
-        const res = await axios.get(`https://finjobs-1.onrender.com/api/v1/application/${id}/applicants`, { withCredentials: true });
+        const res = await axios.get(`${APPLICATION_API_END_POINT}/${id}/applicants`, { withCredentials: true });
         console.log('API Response:', res.data);
         if (res.data.job) {
           dispatch(setAllApplicants(res.data.job));  
