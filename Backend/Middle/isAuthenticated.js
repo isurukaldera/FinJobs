@@ -9,14 +9,15 @@ const isAuthenticated = async (req, res, next) => {
                 success: false,
             });
         }
+        console.log("SECRET_KEY", process.env.SECRET_KEY);  // Debugging step
 
-        const decoded = await jwt.verify(token, process.env.SECRET_KEY);
-        if (!decoded) {
-            return res.status(401).json({
-                message: "Invalid token",
-                success: false
-            });
-        }
+            const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+            if (!decoded) {
+                return res.status(401).json({
+                    message: "Invalid token",
+                    success: false
+                });
+            }
 
         req.id = decoded.userId; // Store the userId from the token in the request object
         next();
