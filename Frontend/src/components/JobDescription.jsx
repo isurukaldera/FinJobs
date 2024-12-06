@@ -7,6 +7,7 @@ import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from '../utils/constant'
 import { setSingleJob } from '../redux/jobSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
+import axiosInstance from '../../../Backend/Middle/axiosInstance';
 
 const JobDescription = () => {
     const params = useParams();
@@ -58,10 +59,24 @@ const JobDescription = () => {
             return;
         }
 
-        console.log('Attempting to apply for job:', jobId);
-
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
+            const token = localStorage.getItem('token'); // Get the token from localStorage
+
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in.");
+                return;
+            }
+
+            const res = await axiosInstance.get(
+                `${APPLICATION_API_END_POINT}/apply/${jobId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Include the token in Authorization header
+                    },
+                    withCredentials: true, // Optional: Include cookies if needed
+                }
+            );
+
             console.log('API Response:', res.data);
 
             if (res.data.success) {
