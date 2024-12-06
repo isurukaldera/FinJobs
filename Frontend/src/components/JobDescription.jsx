@@ -37,8 +37,14 @@ const JobDescription = () => {
 
     useEffect(()=>{
         const fetchSingleJob = async () => {
+            const token = localStorage.getItem('token'); 
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Send token in Authorization header
+                    },
+                    withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+                });
                 if(res.data.success){
                     dispatch(setSingleJob(res.data.job));
                     setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
