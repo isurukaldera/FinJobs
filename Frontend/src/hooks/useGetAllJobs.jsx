@@ -7,10 +7,15 @@ import { setAllJobs } from '../redux/jobSlice';
 const useGetAllJobs = () => {
     const dispatch = useDispatch();
     const { searchedQuery } = useSelector(store => store.job);
-    
+
     useEffect(() => {
         const fetchAllJobs = async () => {
-            const token = localStorage.getItem("token"); // Get token from localStorage
+            const token = localStorage.getItem("token"); // Retrieve token
+            if (!token) {
+                console.error("No token found. Please log in.");
+                return;
+            }
+            // Get token from localStorage
 
             if (!token) {
                 console.log("No token found. User might not be authenticated.");
@@ -18,7 +23,7 @@ const useGetAllJobs = () => {
             }
 
             try {
-                console.log('Job_api_working', JOB_API_END_POINT);
+                console.log("Token:", token);
                 const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, {
                     headers: {
                         Authorization: `Bearer ${token}`, // Send the token in the Authorization header

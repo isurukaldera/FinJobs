@@ -1,26 +1,18 @@
 import jwt from "jsonwebtoken";
 
 const isAuthenticated = (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1]; // Extract token from "Bearer <token>"
+    if (!token) {
+        return res.status(401).json({ success: false, message: "No token provided." });
+    }
+
     try {
-        const token = req.headers.authorization?.split(" ")[1]; // Get token from the header
-
-        if (!token) {
-            return res.status(401).json({
-                message: "Authorization token missing",
-                success: false,
-            });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Verify the token using the secret key
-        req.id = decoded.userId; // Attach userId to the request object
-
-        next(); // Continue to the next middleware/handler
-    } catch (error) {
-        console.error("Token verification failed:", error);
-        return res.status(401).json({
-            message: "Invalid or expired token",
-            success: false,
-        });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+        req.userId = decoded.id; // Attach user info to request
+        next(); // Proceed to next middleware/controller
+    } catch (err) {
+        console.error("Token verification failed:", err);
+        res.status(401).json({ success: false, message: "Invalid token." });
     }
 };
 
