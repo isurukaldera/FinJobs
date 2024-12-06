@@ -32,7 +32,7 @@ app.use(limiter); // Apply rate limiting globally
 
 // CORS options
 const corsOption = {
-    origin: process.env.CLIENT_ORIGIN || 'https://finjobs.onrender.com',
+    origin:'https://finjobs.onrender.com',
     credentials: true,
 };
 

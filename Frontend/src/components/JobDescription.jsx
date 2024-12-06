@@ -7,94 +7,48 @@ import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from '../utils/constant'
 import { setSingleJob } from '../redux/jobSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import axiosInstance from '../../../Backend/Middle/axiosInstance';
 
 const JobDescription = () => {
+    const {singleJob} = useSelector(store => store.job);
+    const {user} = useSelector(store=>store.auth);
+    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const [isApplied, setIsApplied] = useState(isIntiallyApplied);
+
     const params = useParams();
     const jobId = params.id;
-
-    const { singleJob } = useSelector(store => store.job);
-    const { user } = useSelector(store => store.auth);
-    const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
-
-    const [isApplied, setIsApplied] = useState(isInitiallyApplied);
-
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchSingleJob = async () => {
-            try {
-                const token = localStorage.getItem('token'); // Get token from localStorage
-                if (!token) {
-                    toast.error('Authentication token is missing.');
-                    return;
-                }
-
-                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,  // Set Bearer token in the Authorization header
-                    },
-                    withCredentials: true  // Send cookies with the request, if needed
-                });
-
-                console.log('Fetching Details ...');
-                if (res.data.success) {
-                    dispatch(setSingleJob(res.data.job));
-
-                    const alreadyApplied = res.data.job.applications?.some(application => application.applicant === user?._id) || false;
-                    setIsApplied(alreadyApplied);
-                }
-            } catch (error) {
-                console.error('Error fetching job:', error.response || error.message);
-                toast.error('Failed to fetch job details.');
-            }
-        };
-
-        fetchSingleJob();
-    }, [jobId, dispatch, user?._id]);
-
     const applyJobHandler = async () => {
-        if (isApplied) {
-            console.log('User has already applied.');
-            return;
-        }
-
-        console.log('Attempting to apply for job:', jobId);
-
         try {
-            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-
-            if (!token) {
-                toast.error("Authentication token is missing. Please log in.");
-                return;
-            }
-
-            const response = await axiosInstance.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Set the token in the headers
-                },
-                withCredentials: true, // Optional: for cookies
-            });
-
-            console.log('API Response:', response.data);
-
-            if (res.data.success) {
-                const updatedSingleJob = {
-                    ...singleJob,
-                    applications: [...singleJob.applications, { applicant: user?._id }],
-                };
-                dispatch(setSingleJob(updatedSingleJob));
-                setIsApplied(true);
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
+            
+            if(res.data.success){
+                setIsApplied(true); // Update the local state
+                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?._id}]}
+                dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
                 toast.success(res.data.message);
-            } else {
-                toast.error(res.data.message || "Failed to apply.");
+
             }
         } catch (error) {
-            console.error('Error during applyJobHandler:', error.response?.data || error.message);
-            toast.error(error.response?.data?.message || "An error occurred.");
+            console.log(error);
+            toast.error(error.response.data.message);
         }
-    };
+    }
 
+    useEffect(()=>{
+        const fetchSingleJob = async () => {
+            try {
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
+                if(res.data.success){
+                    dispatch(setSingleJob(res.data.job));
+                    setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchSingleJob(); 
+    },[jobId,dispatch, user?._id]);
 
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>
