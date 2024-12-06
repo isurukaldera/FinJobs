@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: process.meta.env.REACT_APP_API_BASE_URL, // Your API base URL
+    baseURL: import.meta.env.VITE_API_BASE_URL
+, // Your API base URL
     withCredentials: true, // Send cookies if needed
 });
 
