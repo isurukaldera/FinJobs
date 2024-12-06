@@ -18,7 +18,8 @@ const isAuthenticated = async (req, res, next) => {
             });
         }
 
-        
+        req.id = decoded.userId; // Store the userId from the token in the request object
+        next();
     } catch (error) {
         console.log(error);
         return res.status(500).json({
