@@ -1,36 +1,20 @@
 import jwt from "jsonwebtoken";
 
-const isAuthenticated = async (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
+    const authHeader = req.headers.authorization; // Extract Authorization header
+
+    if (!authHeader) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1]; // Get token after "Bearer "
+
     try {
-        // Fetch the token from cookies or Authorization header
-        const token =
-            req.cookies.token || // From cookies
-            req.headers.authorization?.split(' ')[1]; // From Authorization header
-
-        // If token is missing, return unauthorized response
-        if (!token) {
-            return res.status(401).json({
-                message: "User not authenticated",
-                success: false,
-            });
-        }
-
-        // Verify the token and decode the payload
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
-        // Attach the decoded user ID to the request object
-        req.id = decoded.userId;
-
-        // Proceed to the next middleware or route handler
-        next();
+        const decoded = jwt.verify(token, process.env.SECRET_KEY); // Verify the token
+        req.user = decoded; // Attach user info to the request object
+        next(); // Allow the request to proceed
     } catch (error) {
-        console.error("Authentication error:", error.message || error);
-
-        // Return a response indicating invalid or expired token
-        return res.status(401).json({
-            message: "Invalid or expired token",
-            success: false,
-        });
+        return res.status(401).json({ message: "Invalid or expired token" });
     }
 };
 
