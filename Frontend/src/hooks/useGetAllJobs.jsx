@@ -10,6 +10,7 @@ const useGetAllJobs = () => {
     const {searchedQuery} = useSelector(store=>store.job);
     useEffect(()=>{
         const fetchAllJobs = async () => {
+            const token = localStorage.getItem('token'); 
             try {
                 const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, {
                     headers: {
