@@ -12,21 +12,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setUser } from '../../../redux/authSlice';
 import { Loader2 } from 'lucide-react';
 
-
 const Login = () => {
     const [input, setInput] = useState({
         email: "",
         password: "",
+        role: "student", // Default role
     });
 
     const { Loading } = useSelector((store) => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Handle input change
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     };
 
+    // Handle form submission
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -45,6 +47,7 @@ const Login = () => {
         try {
             dispatch(setLoading(true)); // Show loading state
 
+            // API Request for login
             const res = await axios.post(
                 `${USER_API_END_POINT}/login`,
                 input,
@@ -57,26 +60,29 @@ const Login = () => {
             );
 
             if (res.data.success) {
-                // Store token in localStorage
-                localStorage.setItem("token", res.data.token);
-                console.log("Token stored in localStorage:", res.data.token);
+                const token = res.data.token;
+                console.log("Token received:", token);
 
-                // Update user state in Redux
+                // Store token securely in localStorage
+                localStorage.setItem("token", token);
+
+                // Update Redux user state
                 dispatch(setUser(res.data.user));
-                
-                // Redirect to home or another page after login
+
+                // Redirect to the homepage
                 navigate("/");
 
-                // Show success toast
-                toast.success(res.data.message);
+                // Success message
+                toast.success(res.data.message || "Login successful.");
             } else {
-                toast.error(res.data.message);
+                toast.error(res.data.message || "Login failed. Please try again.");
             }
         } catch (error) {
             console.error("Login error:", error.response?.data);
 
-            if (error.response && error.response.data) {
-                toast.error(error.response.data.message || "Login failed. Please try again.");
+            // Handle server-side or network errors
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
             } else {
                 toast.error("An unexpected error occurred.");
             }
