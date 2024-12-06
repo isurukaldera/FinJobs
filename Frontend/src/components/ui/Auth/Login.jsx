@@ -32,45 +32,43 @@ const Login = () => {
             toast.error("Please fill in all fields.");
             return;
         }
-
+    
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(input.email)) {
             toast.error("Please enter a valid email address.");
             return;
         }
-        console.log(input);  
-
+        console.log(input);
+    
         try {
             dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                withCredentials: true,  // Keep credentials if needed
+                withCredentials: true,  // Make sure to include this for cookies if needed
             });
+    
             if (res.data.success) {
-                // Save the token to localStorage
+                // Store token in localStorage after successful login
                 localStorage.setItem("token", res.data.token);
+                console.log("Token stored in localStorage:", res.data.token); // For debugging
                 
-                // Save the user data (optional)
-                dispatch(setUser(res.data.user));
-
-                // Redirect user after successful login
-                navigate("/");
-
+                dispatch(setUser(res.data.user)); // Store user details in Redux if needed
+                navigate("/"); // Redirect to home or another page after login
                 toast.success(res.data.message);
             } else {
                 toast.error(res.data.message);
             }
         } catch (error) {
-            console.log(error.response?.data);  // Log detailed error from the server
+            console.log(error.response?.data); // Log detailed error from the server
             if (error.response && error.response.data) {
                 toast.error(error.response.data.message || "Login failed. Please try again.");
             } else {
                 toast.error("An unexpected error occurred.");
             }
         } finally {
-            dispatch(setLoading(false));
+            dispatch(setLoading(false)); // Reset loading state
         }
     };
 
