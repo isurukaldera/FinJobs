@@ -14,7 +14,7 @@ export const register = async (req, res) => {
                 success: false
             });
         }
-        
+
         if (req.file) {
             const fileUri = getDataUri(req.file);
             const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
@@ -63,7 +63,7 @@ export const login = async (req, res) => {
         if (!email || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
-                success: false
+                success: false,
             });
         }
 
@@ -86,26 +86,38 @@ export const login = async (req, res) => {
         if (role !== user.role) {
             return res.status(400).json({
                 message: "Account doesn't exist with current role.",
-                success: false
+                success: false,
             });
         }
 
+        // Generate JWT token
         const tokenData = { userId: user._id, role: user.role };
         const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
+        // Prepare user data for response
         const userResponse = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
             phoneNumber: user.phoneNumber,
             role: user.role,
-            profile: user.profile
+            profile: user.profile,
         };
 
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
-            message: `Welcome back ${user.fullname}`,
-            user: userResponse,
-            success: true
+        // Set token in a cookie
+        res.cookie("token", token, {
+            maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+            httpOnly: true, // Prevent access from JavaScript
+            secure: process.env.NODE_ENV === 'production', // Secure only in production
+            sameSite: "strict", // Restrict cross-site access
+        });
+
+        // Send token in the response body for frontend storage if needed
+        return res.status(200).json({
+            message: `Welcome back, ${user.fullname}`,
+            success: true,
+            token, // Include token in the response for frontend use
+            user: userResponse, // Send user data
         });
     } catch (error) {
         console.error(error);
@@ -128,7 +140,7 @@ export const logout = (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
-        const userId = req.id; 
+        const userId = req.id;
         let user = await User.findById(userId);
 
         if (!user) {
