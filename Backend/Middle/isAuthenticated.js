@@ -7,8 +7,10 @@ const isAuthenticated = (req, res, next) => {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({ success: false, message: "Token missing or invalid" });
     }
+    console.log("Auth header:", authHeader); // Log entire authorization header
 
-    const token = authHeader.split(" ")[1]; // Extract the token
+
+    const token = authHeader.split(" ")[1] // Extract the token
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
         req.userId = decoded.id; // Attach the decoded user ID to the request

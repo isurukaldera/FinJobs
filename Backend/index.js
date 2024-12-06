@@ -16,13 +16,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({ 
-  origin: "https://finjobs.onrender.com", // Your frontend URL
-  credentials: true, // Allow cookies and credentials
-  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-  methods: ['GET', 'POST', 'OPTIONS'],
-},));
-
+app.use(cors({
+    origin: "https://finjobs.onrender.com", // Your frontend URL
+    credentials: true, // Allow cookies and credentials
+    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+    methods: ['GET', 'POST', 'OPTIONS'],
+  }));
+  
 
 const PORT = process.env.PORT || 3000;
 
