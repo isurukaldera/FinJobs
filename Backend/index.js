@@ -16,10 +16,23 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({ 
-  origin: "https://finjobs.onrender.com", // Your frontend URL
-  credentials: true // Allow cookies and credentials
-}));
+app.options('*', cors()); // This handles preflight requests for all routes
+
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = ['http://localhost:5173', 'https://finjobs.onrender.com'];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Allow cookies and credentials
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+  methods: ['GET', 'POST', 'OPTIONS'], // Allow these methods
+
+
+}));;
 
 const PORT = process.env.PORT || 3000;
 
