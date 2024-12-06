@@ -15,8 +15,14 @@ const Applicants = () => {
 
   useEffect(() => {
     const fetchAllApplicants = async () => {
+      const token = localStorage.getItem('token'); 
       try {
-        const res = await axios.get(`${APPLICATION_API_END_POINT}/${id}/applicants`, { withCredentials: true });
+        const res = await axios.get(`${APPLICATION_API_END_POINT}/${id}/applicants`, {
+          headers: {
+              Authorization: `Bearer ${token}`, // Send token in Authorization header
+          },
+          withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+      });
         console.log('API Response:', res.data);
         if (res.data.job) {
           dispatch(setAllApplicants(res.data.job));  

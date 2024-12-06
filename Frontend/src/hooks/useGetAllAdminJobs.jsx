@@ -10,12 +10,18 @@ const useGetAllAdminJobs = () => {
 
   useEffect(() => {
     const fetchAllAdminJobs = async () => {
+      const token = localStorage.getItem('token');
       try {
-        console.log("Fetching admin jobs..."); 
-        const res = await axios.get(`${JOB_API_END_POINT}/getadminjobs`, { withCredentials: true });
-        
-        console.log('Fetched Jobs:', res.data); 
-        
+        console.log("Fetching admin jobs...");
+        const res = await axios.get(`${JOB_API_END_POINT}/getadminjobs`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in Authorization header
+          },
+          withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+        });
+
+        console.log('Fetched Jobs:', res.data);
+
         if (res.data.success) {
           dispatch(setAllAdminJobs(res.data.jobs));
         } else {

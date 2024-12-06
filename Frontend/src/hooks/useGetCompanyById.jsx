@@ -13,8 +13,14 @@ const useGetCompanyById = (companyId) => {
     useEffect(() => {
         const fetchSingleCompany = async () => {
             setLoading(true);
+            const token = localStorage.getItem('token'); 
             try {
-                const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`, { withCredentials: true });
+                const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Send token in Authorization header
+                    },
+                    withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+                });
                 console.log('Response:', res.data);
                 if (res.data.success) {
                     dispatch(setSingleCompany(res.data.company));

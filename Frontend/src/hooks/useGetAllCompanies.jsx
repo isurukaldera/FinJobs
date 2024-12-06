@@ -9,7 +9,7 @@ const useGetAllCompanies = () => {
     const dispatch = useDispatch();
     useEffect(()=>{
         const fetchCompanies = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token'); 
             try {
                 const res = await axios.get(`${COMPANY_API_END_POINT}/get`,{
                     headers: {
