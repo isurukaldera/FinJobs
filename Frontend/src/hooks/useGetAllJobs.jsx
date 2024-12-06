@@ -11,28 +11,34 @@ const useGetAllJobs = () => {
     useEffect(() => {
         const fetchAllJobs = async () => {
             try {
-                const token = localStorage.getItem('token'); // Get the token from localStorage
+                const token = localStorage.getItem('token'); // Retrieve token from localStorage
+
                 if (token) {
                     const response = await axios.get(`${JOB_API_END_POINT}/get`, {
                         headers: {
-                            'Authorization': `Bearer ${token}`, // Add token to the header
+                            'Authorization': `Bearer ${token}`, // Include token in Authorization header
                         },
-                        withCredentials: true, // If needed for cookies
+                        // 'withCredentials': true,  // Uncomment if you need cookies
                     });
-                    console.log(response.data); // Check this log to see the response
+
+                    console.log(response.data); // Debug: Log response
+
                     if (response.data.success) {
-                        dispatch(setAllJobs(response.data.jobs)); // Assuming the jobs are in the 'jobs' field
+                        dispatch(setAllJobs(response.data.jobs)); // Assuming 'jobs' field contains job list
+                    } else {
+                        console.error("Failed to fetch jobs:", response.data.message);
                     }
                 } else {
                     console.log("No token found, cannot fetch jobs.");
                 }
             } catch (error) {
-                console.error("Error fetching jobs:", error);
+                console.error("Error fetching jobs:", error); // Log full error object for better debugging
             }
         };
 
         fetchAllJobs();
-    }, [dispatch, searchedQuery]); // Add searchedQuery as a dependency if needed
+    }, [dispatch, searchedQuery]); // Rerun fetch when 'searchedQuery' changes
+
 };
 
 export default useGetAllJobs    
