@@ -19,8 +19,14 @@ const JobDescription = () => {
     const dispatch = useDispatch();
 
     const applyJobHandler = async () => {
+        const token = localStorage.getItem('token'); 
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send token in Authorization header
+                },
+                withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+            });
             
             if(res.data.success){
                 setIsApplied(true); // Update the local state
