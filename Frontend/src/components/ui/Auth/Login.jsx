@@ -12,13 +12,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setUser } from '../../../redux/authSlice';
 import { Loader2 } from 'lucide-react';
 
+
 const Login = () => {
     const [input, setInput] = useState({
         email: "",
-        password: "", // Updated to match the input field names
+        password: "",
     });
 
-    const { Loading } = useSelector(store => store.auth);
+    const { Loading } = useSelector((store) => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -28,58 +29,73 @@ const Login = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+
+        // Form validation
         if (!input.email || !input.password) {
             toast.error("Please fill in all fields.");
             return;
         }
-    
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(input.email)) {
             toast.error("Please enter a valid email address.");
             return;
         }
-        console.log(input);
-    
+
         try {
-            dispatch(setLoading(true));
-            const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,  // Make sure to include this for cookies if needed
-            });
-    
+            dispatch(setLoading(true)); // Show loading state
+
+            const res = await axios.post(
+                `${USER_API_END_POINT}/login`,
+                input,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true, // Include for cookies if required
+                }
+            );
+
             if (res.data.success) {
-                // Store token in localStorage after successful login
+                // Store token in localStorage
                 localStorage.setItem("token", res.data.token);
-                console.log("Token stored in localStorage:", res.data.token); // For debugging
+                console.log("Token stored in localStorage:", res.data.token);
+
+                // Update user state in Redux
+                dispatch(setUser(res.data.user));
                 
-                dispatch(setUser(res.data.user)); // Store user details in Redux if needed
-                navigate("/"); // Redirect to home or another page after login
+                // Redirect to home or another page after login
+                navigate("/");
+
+                // Show success toast
                 toast.success(res.data.message);
             } else {
                 toast.error(res.data.message);
             }
         } catch (error) {
-            console.log(error.response?.data); // Log detailed error from the server
+            console.error("Login error:", error.response?.data);
+
             if (error.response && error.response.data) {
                 toast.error(error.response.data.message || "Login failed. Please try again.");
             } else {
                 toast.error("An unexpected error occurred.");
             }
         } finally {
-            dispatch(setLoading(false)); // Reset loading state
+            dispatch(setLoading(false)); // Hide loading state
         }
     };
 
     return (
         <div>
             <Navbar />
-            <div className='flex items-center justify-center max-w-7xl mx-auto'>
-                <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-md p-4 my-10'>
-                    <h1 className='font-bold text-xl mb-5'>Log in with FinJobs</h1>
+            <div className="flex items-center justify-center max-w-7xl mx-auto">
+                <form
+                    onSubmit={submitHandler}
+                    className="w-1/2 border border-gray-200 rounded-md p-4 my-10"
+                >
+                    <h1 className="font-bold text-xl mb-5">Log in with FinJobs</h1>
 
-                    <div className='my-2'>
+                    <div className="my-2">
                         <Label>Email</Label>
                         <Input
                             type="text"
@@ -90,7 +106,7 @@ const Login = () => {
                         />
                     </div>
 
-                    <div className='my-2'>
+                    <div className="my-2">
                         <Label>Password</Label>
                         <Input
                             type="password"
@@ -100,14 +116,15 @@ const Login = () => {
                             placeholder="*********"
                         />
                     </div>
-                    <div className='flex items-center justify-between'>
+
+                    <div className="flex items-center justify-between">
                         <RadioGroup className="flex items-center gap-4 my-5">
                             <div className="flex items-center space-x-2">
                                 <Input
                                     type="radio"
                                     name="role"
                                     value="student"
-                                    checked={input.role === 'student'}
+                                    checked={input.role === "student"}
                                     onChange={changeEventHandler}
                                     className="cursor-pointer"
                                 />
@@ -118,7 +135,7 @@ const Login = () => {
                                     type="radio"
                                     name="role"
                                     value="recruiter"
-                                    checked={input.role === 'recruiter'}
+                                    checked={input.role === "recruiter"}
                                     onChange={changeEventHandler}
                                     className="cursor-pointer"
                                 />
@@ -126,10 +143,24 @@ const Login = () => {
                             </div>
                         </RadioGroup>
                     </div>
-                    {
-                        Loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin'/>Please Wait</Button> : <Button type="submit" className="w-full my-4">Login</Button>
-                    }
-                    <span className='flex gap-2 text-sm'>Don't have an account? <Link to="/signup" className='text-blue-600'>Sign Up</Link></span>
+
+                    {Loading ? (
+                        <Button className="w-full my-4">
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Please Wait
+                        </Button>
+                    ) : (
+                        <Button type="submit" className="w-full my-4">
+                            Login
+                        </Button>
+                    )}
+
+                    <span className="flex gap-2 text-sm">
+                        Don't have an account?{" "}
+                        <Link to="/signup" className="text-blue-600">
+                            Sign Up
+                        </Link>
+                    </span>
                 </form>
             </div>
         </div>
