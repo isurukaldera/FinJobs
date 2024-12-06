@@ -10,14 +10,16 @@ const useGetAllJobs = () => {
     useEffect(()=>{
         const fetchAllJobs = async () => {
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,{withCredentials:true});
-                if(res.data.success){
-                    dispatch(setAllJobs(res.data.jobs));
-                }
-            } catch (error) {
-                console.log(error);
+                const token = localStorage.getItem("token"); // or however you store the token
+                const response = await axios.get("https://finjobs-1-backend.onrender.com/api/v1/job/get", {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                console.log(response.data);
+            } catch (err) {
+                console.error(err);
             }
-        }
+        };
+        
         fetchAllJobs();
     },[])
 }
