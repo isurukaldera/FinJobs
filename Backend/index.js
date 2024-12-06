@@ -19,10 +19,10 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 
-app.use(cors({
-    origin: 'https://finjobs.onrender.com', 
-    credentials: true, 
-}));
+
+const cors = require("cors");
+app.use(cors({ origin: "https://finjobs.onrender.com", credentials: true }));
+
 
 const PORT = process.env.PORT || 3000;
 

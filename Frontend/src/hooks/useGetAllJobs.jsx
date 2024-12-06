@@ -8,17 +8,24 @@ const useGetAllJobs = () => {
     const dispatch = useDispatch();
     const {searchedQuery} = useSelector(store=>store.job);
     useEffect(()=>{
-        const fetchAllJobs = async () => {
-            try {
-                const token = localStorage.getItem("token"); // or however you store the token
-                const response = await axios.get("https://finjobs-1-backend.onrender.com/api/v1/job/get", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                console.log(response.data);
-            } catch (err) {
-                console.error(err);
+          const fetchAllJobs = async () => {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+              console.error("No token found. User might not be authenticated.");
+              return;
             }
-        };
+            try {
+              const response = await axios.get("https://finjobs-1-backend.onrender.com/api/v1/job/get", {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              return response.data;
+            } catch (error) {
+              console.error("Error fetching jobs:", error.response?.data || error.message);
+            }
+          };
+          
         
         fetchAllJobs();
     },[])
