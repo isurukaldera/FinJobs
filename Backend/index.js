@@ -20,8 +20,8 @@ app.use(cookieParser());
 
 
 app.use(cors({
-    origin: 'https://finjobs.onrender.com',  // Replace with your front-end URL
-    credentials: true, // To allow sending cookies along with the request
+    origin: 'https://finjobs.onrender.com', // Your frontend URL
+    credentials: true, // Allows sending cookies
 }));
 
 const PORT = process.env.PORT || 3000;

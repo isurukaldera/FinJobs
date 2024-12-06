@@ -12,7 +12,15 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0', 
-    port: process.env.PORT || 5173,  
+    port: process.env.PORT || 5173, 
+    proxy: {
+      '/api': {
+        target: 'https://finjobs-1.onrender.com', // Your backend URL
+        changeOrigin: true,
+        secure: false, // Disable SSL verification if needed
+      },
+    },
   },
+  
 
 })
