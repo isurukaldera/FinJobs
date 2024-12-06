@@ -16,17 +16,18 @@ const CompanyCreate = () => {
     const dispatch = useDispatch();
 
     const registerNewCompany = async () => {
+        const token = localStorage.getItem('token');
         try {
-            console.log("Submitting company name:", companyName); 
+            console.log("Submitting company name:", companyName);
             const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    Authorization: `Bearer ${token}`, // Send token in Authorization header
                 },
-                withCredentials: true
+                withCredentials: true, // If you're using cookies, keep this, otherwise remove it
             });
 
-            console.log("API Response:", res.data); 
-            
+            console.log("API Response:", res.data);
+
             if (res?.data?.success) {
                 dispatch(setSingleCompany(res.data.company));
                 toast.success(res.data.message);
