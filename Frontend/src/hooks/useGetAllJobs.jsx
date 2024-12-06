@@ -6,44 +6,21 @@ import { setAllJobs } from '../redux/jobSlice';
 
 const useGetAllJobs = () => {
     const dispatch = useDispatch();
-
-    useEffect(() => {
+    const {searchedQuery} = useSelector(store=>store.job);
+    useEffect(()=>{
         const fetchAllJobs = async () => {
             try {
-                const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-                if (!token) {
-                    console.error("No token found. User might not be authenticated.");
-                    return; // Exit if there's no token
+                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,{withCredentials:true});
+                if(res.data.success){
+                    dispatch(setAllJobs(res.data.jobs));
                 }
-
-                // Make the API request with the token in the header
-                const response = await axios.get(
-                    "https://finjobs-1-backend.onrender.com/api/v1/job/get", 
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`, // Include token for authentication
-                        },
-                    }
-                );
-
-                console.log("Fetched Jobs:", response.data.jobs);  // Log the response to check if jobs are returned
-
-                // Dispatch action to store jobs in Redux state
-                if (response.data.success) {
-                    dispatch(setAllJobs(response.data.jobs)); // Assuming response.data.jobs contains job data
-                } else {
-                    console.error("Failed to fetch jobs:", response.data.message);
-                }
-
-            } catch (err) {
-                console.error("Error fetching jobs:", err);
+            } catch (error) {
+                console.log(error);
             }
-        };
+        }
+        fetchAllJobs();
+    },[])
+}
 
-        fetchAllJobs(); // Call the function to fetch jobs when the component mounts
-
-    }, [dispatch]); // Make sure to only re-run the effect when necessary
-
-};
 
 export default useGetAllJobs;
