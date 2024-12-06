@@ -21,7 +21,7 @@ const useGetAllJobs = () => {
 
                 const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, {
                     headers: {
-                        Authorization: `Bearer ${JWT_SECRET}`, // Ensure proper format
+                        Authorization: `Bearer ${SECRET_KEY}`, // Ensure proper format
                     },
                     withCredentials: true,
                 });
