@@ -11,7 +11,7 @@ const useGetAllCompanies = () => {
         const fetchCompanies = async () => {
             const token = localStorage.getItem('token');
             try {
-                const res = await axios.get(`${COMPANY_API_END_POINT}/get`,{withCredentials:true},{
+                const res = await axios.get(`${COMPANY_API_END_POINT}/get`,{
                     headers: {
                         Authorization: `Bearer ${token}`, // Send token in Authorization header
                     },
