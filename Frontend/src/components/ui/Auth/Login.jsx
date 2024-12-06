@@ -33,31 +33,34 @@ const Login = () => {
             toast.error("Please fill in all fields.");
             return;
         }
-
+    
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(input.email)) {
             toast.error("Please enter a valid email address.");
             return;
         }
-        console.log(input);  
-
+    
         try {
             dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                withCredentials: true,
+                withCredentials: true, // If you need to handle cookies for sessions
             });
+    
             if (res.data.success) {
-                dispatch(setUser(res.data.user))
-                navigate("/");
+                // Store token in localStorage (if you need to send it later in API requests)
+                localStorage.setItem("token", res.data.token); 
+    
+                dispatch(setUser(res.data.user));
+                navigate("/");  // Redirect to homepage or desired route
                 toast.success(res.data.message);
             } else {
                 toast.error(res.data.message);
             }
         } catch (error) {
-            console.log(error.response?.data);  // Log detailed error from the server
+            console.log(error.response?.data);
             if (error.response && error.response.data) {
                 toast.error(error.response.data.message || "Login failed. Please try again.");
             } else {

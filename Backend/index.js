@@ -7,8 +7,7 @@ import userRouter from "./routes/user.route.js";
 import companyRoutes from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
-import helmet from "helmet";  // For security
-import rateLimit from "express-rate-limit";  // For rate limiting
+
 
 
 dotenv.config({});

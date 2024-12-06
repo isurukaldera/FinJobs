@@ -10,13 +10,17 @@ const useGetAllJobs = () => {
     useEffect(()=>{
         const fetchAllJobs = async () => {
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,{withCredentials:true});
-                if(res.data.success){
-                    dispatch(setAllJobs(res.data.jobs));
-                }
+                const token = localStorage.getItem('token'); // Get the token from localStorage
+                const response = await axios.get(`${JOB_API_END_POINT}/get`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                console.log(response.data);
             } catch (error) {
-                console.log(error);
+                console.error("Error fetching jobs:", error);
             }
+        
         }
         fetchAllJobs();
     },[])
