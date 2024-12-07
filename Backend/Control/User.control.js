@@ -93,13 +93,12 @@ export const login = async (req, res) => {
             profile: user.profile
         }
 
-        return res.status(200)
-    .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' })
-    .json({
-        message: `Welcome back ${user.fullname}`,
-        user,
-        success: true
-    });
+        return res.status(200).json({
+            message: `Welcome back ${user.fullname}`,
+            user,
+            success: true,
+            token: token // Make sure token is part of the response body
+        });
     } catch (error) {
         console.log(error);
     }
