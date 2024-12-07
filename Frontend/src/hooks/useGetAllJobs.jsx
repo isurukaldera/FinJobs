@@ -14,23 +14,21 @@ const useGetAllJobs = () => {
             try {
                 const res = await axios.get(
                     `${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,
-                    { headers: {
-                        'Authorization': `Bearer ${token}` // Add token here
-                    },
-                    withCredentials: true // Ensure cookies are still sent, if necessary
-                }  // Ensures cookies are sent
+                    { 
+                        headers: {
+                            'Authorization': `Bearer ${token}` // Add token here
+                        },
+                        withCredentials: true // Ensure cookies are sent, if needed
+                    }
                 );
-        
-                console.log("API Response:", res.data);
+                
                 if (res.data.success) {
-                    dispatch(setAllJobs(res.data.jobs));
+                    dispatch(setAllJobs(res.data.jobs)); // Update Redux state with jobs
                 }
             } catch (error) {
                 console.log("Error fetching jobs:", error);
-                // Handle other error states (e.g., 401 Unauthorized)
                 if (error.response && error.response.status === 401) {
                     console.log("Unauthorized: Please log in again.");
-                    // Optionally, handle redirection to login page
                 }
             }
         }
