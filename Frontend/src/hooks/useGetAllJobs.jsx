@@ -29,13 +29,10 @@ const useGetAllJobs = () => {
                     // Optionally, handle redirection to login page
                 }
             }
-        };
-
-        if (searchedQuery && token) {
-            fetchAllJobs();
         }
-    }, [searchedQuery, token, dispatch]);  // Add token to dependencies to re-run when it changes
-};
+        fetchAllJobs();
+    },[])
+}
 
 export default useGetAllJobs;
 
