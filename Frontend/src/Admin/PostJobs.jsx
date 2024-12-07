@@ -44,15 +44,10 @@ const PostJob = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token'); 
+      
         try {
             setLoading(true);
-            const res = await axios.post(`${JOB_API_END_POINT}/post`, input, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Send token in Authorization header
-                },
-                withCredentials: true, // If you're using cookies, keep this, otherwise remove it
-            });
+            const res = await axios.post(`${JOB_API_END_POINT}/post`, input, );
             if (res.data.success) {
                 toast.success(res.data.message);
                 navigate("/admin/jobs");

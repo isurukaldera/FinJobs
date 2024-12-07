@@ -9,14 +9,9 @@ const useGetAppliedJobs = () => {
 
   useEffect(() => {
     const fetchAppliedJobs = async () => {
-      const token = localStorage.getItem('token');
+      
       try {
-        const res = await axios.get(`${APPLICATION_API_END_POINT}/get`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Send token in Authorization header
-          },
-          withCredentials: true, // If you're using cookies, keep this, otherwise remove it
-        });
+        const res = await axios.get(`${APPLICATION_API_END_POINT}/get`,);
         console.log(res.data); // Check this log to see the structure of the response
         if (res.data.success) {
           dispatch(setAllAppliedJobs(res.data.application));

@@ -64,15 +64,10 @@ const CompanySetup = () => {
             formData.append("file", input.file);
         }
 
-        const token = localStorage.getItem('token'); 
+        
         try {
             setLoading(true);
-            const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Send token in Authorization header
-                },
-                withCredentials: true, // If you're using cookies, keep this, otherwise remove it
-            });
+            const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData);
 
             if (res.data.success) {
                 toast.success(res.data.message || "Company updated successfully.");
