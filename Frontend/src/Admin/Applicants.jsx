@@ -8,29 +8,21 @@ import { setAllApplicants } from '../redux/applicationSlice';
 import ApplicantsTable from './ApplicantsTable';
 
 const Applicants = () => {
-  const { id } = useParams();
+  const params = useParams();
   const dispatch = useDispatch();
-  
-  const { applicants } = useSelector((store) => store.application) || { applicants: [] };
+  const {applicants} = useSelector(store=>store.application);
 
   useEffect(() => {
-    const fetchAllApplicants = async () => {
-      
-      try {
-        const res = await axios.get(`${APPLICATION_API_END_POINT}/${id}/applicants`,);
-        console.log('API Response:', res.data);
-        if (res.data.job) {
-          dispatch(setAllApplicants(res.data.job));  
-          console.log('Applicants set:', res.data.job); 
-        } else {
-          console.error('No job data found in response');
-        }
-      } catch (error) {
-        console.error("Error fetching applicants:", error);
+      const fetchAllApplicants = async () => {
+          try {
+              const res = await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`, { withCredentials: true });
+              dispatch(setAllApplicants(res.data.job));
+          } catch (error) {
+              console.log(error);
+          }
       }
-    };
-    fetchAllApplicants();
-  }, [id, dispatch]);
+      fetchAllApplicants();
+  }, []);
 
   return (
     <div>

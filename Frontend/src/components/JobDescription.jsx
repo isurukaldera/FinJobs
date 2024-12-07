@@ -19,19 +19,13 @@ const JobDescription = () => {
     const dispatch = useDispatch();
 
     const applyJobHandler = async () => {
-        const token = localStorage.getItem('token'); 
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Send token in Authorization header
-                },
-                withCredentials: true, // If you're using cookies, keep this, otherwise remove it
-            });
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
             
             if(res.data.success){
-                setIsApplied(true); // Update the local state
+                setIsApplied(true); 
                 const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?._id}]}
-                dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
+                dispatch(setSingleJob(updatedSingleJob)); 
                 toast.success(res.data.message);
 
             }
@@ -43,14 +37,8 @@ const JobDescription = () => {
 
     useEffect(()=>{
         const fetchSingleJob = async () => {
-            const token = localStorage.getItem('token'); 
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Send token in Authorization header
-                    },
-                    withCredentials: true, // If you're using cookies, keep this, otherwise remove it
-                });
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
                 if(res.data.success){
                     dispatch(setSingleJob(res.data.job));
                     setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
@@ -61,6 +49,23 @@ const JobDescription = () => {
         }
         fetchSingleJob(); 
     },[jobId,dispatch, user?._id]);
+
+
+    useEffect(()=>{
+        const fetchSingleJob = async () => {
+            try {
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
+                if(res.data.success){
+                    dispatch(setSingleJob(res.data.job));
+                    setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchSingleJob(); 
+    },[jobId,dispatch, user?._id]);
+
 
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>

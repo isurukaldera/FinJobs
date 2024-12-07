@@ -67,19 +67,23 @@ const CompanySetup = () => {
         
         try {
             setLoading(true);
-            const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData);
-
+            const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                withCredentials: true
+            });
             if (res.data.success) {
-                toast.success(res.data.message || "Company updated successfully.");
+                toast.success(res.data.message);
                 navigate("/admin/companies");
             }
         } catch (error) {
-            console.error('Error updating company:', error);
-            toast.error(error.response?.data?.message || "An error occurred while updating the company.");
+            console.log(error);
+            toast.error(error.response.data.message);
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     return (
         <div>

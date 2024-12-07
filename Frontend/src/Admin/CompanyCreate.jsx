@@ -18,18 +18,17 @@ const CompanyCreate = () => {
     const registerNewCompany = async () => {
         
         try {
-            console.log("Submitting company name:", companyName);
-            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName },);
-
-            console.log("API Response:", res.data);
-
-            if (res?.data?.success) {
+            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, {companyName}, {
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                withCredentials:true
+            });
+            if(res?.data?.success){
                 dispatch(setSingleCompany(res.data.company));
                 toast.success(res.data.message);
                 const companyId = res?.data?.company?._id;
                 navigate(`/admin/companies/${companyId}`);
-            } else {
-                toast.error(res.data.message || 'Failed to register company');
             }
         } catch (error) {
             console.error("Error registering company:", error.response ? error.response.data : error.message);

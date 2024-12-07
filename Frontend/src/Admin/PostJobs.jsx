@@ -24,7 +24,7 @@ const PostJob = () => {
         position: 0,
         companyId: ""
     });
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading]= useState(false);
     const navigate = useNavigate();
 
     const { companies } = useSelector(store => store.company);
@@ -33,28 +33,27 @@ const PostJob = () => {
     };
 
     const selectChangeHandler = (value) => {
-        const selectedCompany = companies.find((company) => company._id === value);
-        if (selectedCompany) {
-            setInput({ ...input, companyId: selectedCompany._id });
-        } else {
-            console.error("Company not found for the selected value:", value);
-        }
+        const selectedCompany = companies.find((company)=> company.name.toLowerCase() === value);
+        setInput({...input, companyId:selectedCompany._id});
     };
-
 
     const submitHandler = async (e) => {
         e.preventDefault();
-      
         try {
             setLoading(true);
-            const res = await axios.post(`${JOB_API_END_POINT}/post`, input, );
-            if (res.data.success) {
+            const res = await axios.post(`${JOB_API_END_POINT}/post`, input,{
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                withCredentials:true
+            });
+            if(res.data.success){
                 toast.success(res.data.message);
                 navigate("/admin/jobs");
             }
         } catch (error) {
             toast.error(error.response.data.message);
-        } finally {
+        } finally{
             setLoading(false);
         }
     }

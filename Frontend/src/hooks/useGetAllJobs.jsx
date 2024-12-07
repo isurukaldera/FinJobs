@@ -6,22 +6,20 @@ import { setAllJobs } from '../redux/jobSlice';
 
 const useGetAllJobs = () => {
     const dispatch = useDispatch();
-    const { searchedQuery } = useSelector(store => store.job);
-
-    useEffect(() => {
+    const {searchedQuery} = useSelector(store=>store.job);
+    useEffect(()=>{
         const fetchAllJobs = async () => {
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`);
-        
-                if (res.data.success) {
+                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,{withCredentials:false});
+                if(res.data.success){
                     dispatch(setAllJobs(res.data.jobs));
                 }
             } catch (error) {
                 console.log(error);
             }
-        };
+        }
         fetchAllJobs();
-    }, [searchedQuery, dispatch]); // Added searchedQuery to the dependency array to refetch when search changes
+    },[])
 }
 
 export default useGetAllJobs;

@@ -6,37 +6,20 @@ import axios from "axios";
 
 const useGetCompanyById = (companyId) => {
     const dispatch = useDispatch();
-    const [company, setCompany] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
+    useEffect(()=>{
         const fetchSingleCompany = async () => {
-            setLoading(true);
-            
             try {
-                const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`,);
-                console.log('Response:', res.data);
-                if (res.data.success) {
+                const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`,{withCredentials:true});
+                console.log(res.data.company);
+                if(res.data.success){
                     dispatch(setSingleCompany(res.data.company));
-                    setCompany(res.data.company);
-                } else {
-                    setError("Failed to fetch company data");
                 }
             } catch (error) {
-                console.error('Error fetching company:', error);
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                console.log(error);
             }
-        };
-
-        if (companyId) {
-            fetchSingleCompany();
         }
-    }, [companyId, dispatch]);
-
-    return { company, loading, error };
-};
+        fetchSingleCompany();
+    },[companyId, dispatch])
+}
 
 export default useGetCompanyById;
