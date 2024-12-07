@@ -9,43 +9,58 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
 const JobDescription = () => {
-    const { singleJob } = useSelector(store => store.job);
-    const [isApplied, setIsApplied] = useState(false);
+    const {singleJob} = useSelector(store => store.job);
+    const {user} = useSelector(store=>store.auth);
+    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const [isApplied, setIsApplied] = useState(isIntiallyApplied);
 
     const params = useParams();
     const jobId = params.id;
     const dispatch = useDispatch();
 
     const applyJobHandler = async () => {
+        const token = localStorage.getItem('token'); 
         try {
-            const res = await axios.post(`${APPLICATION_API_END_POINT}/apply/${jobId}`);
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send token in Authorization header
+                },
+                withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+            });
             
-            if (res.data.success) {
+            if(res.data.success){
                 setIsApplied(true); // Update the local state
-                const updatedSingleJob = { ...singleJob, applications: [...singleJob.applications, { applicant: "user_id_placeholder" }] }
-                dispatch(setSingleJob(updatedSingleJob)); // Helps us to real-time UI update
+                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?._id}]}
+                dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
                 toast.success(res.data.message);
+
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response?.data?.message || "Something went wrong.");
+            toast.error(error.response.data.message);
         }
     }
 
-    useEffect(() => {
+    useEffect(()=>{
         const fetchSingleJob = async () => {
+            const token = localStorage.getItem('token'); 
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`);
-                if (res.data.success) {
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Send token in Authorization header
+                    },
+                    withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+                });
+                if(res.data.success){
                     dispatch(setSingleJob(res.data.job));
-                    setIsApplied(res.data.job.applications.some(application => application.applicant === "user_id_placeholder")) // Replace with actual user check if needed
+                    setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
                 }
             } catch (error) {
                 console.log(error);
             }
-        };
-        fetchSingleJob();
-    }, [jobId, dispatch]);
+        }
+        fetchSingleJob(); 
+    },[jobId,dispatch, user?._id]);
 
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>
