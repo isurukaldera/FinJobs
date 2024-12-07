@@ -103,26 +103,15 @@ export const login = async (req, res) => {
             role: user.role,
             profile: user.profile,
         };
-
         return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
             message: `Welcome back ${user.fullname}`,
             user,
             success: true
         })
-
-
-        // Send token in the response body for frontend storage if needed
-        return res.status(200).json({
-            message: `Welcome back, ${user.fullname}`,
-            success: true,
-            token, // Include token in the response for frontend use
-            user: userResponse, // Send user data
-        });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error.", success: false });
+        console.log(error);
     }
-};
+}
 
 export const logout = (req, res) => {
     try {
