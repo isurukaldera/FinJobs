@@ -6,36 +6,36 @@ import { setAllJobs } from '../redux/jobSlice';
 
 const useGetAllJobs = () => {
     const dispatch = useDispatch();
-    const { searchedQuery } = useSelector((store) => store.job);
-    const { token } = useSelector((store) => store.auth);  // Get the token from the Redux store
+    const { searchedQuery } = useSelector(store => store.job);
 
     useEffect(() => {
         const fetchAllJobs = async () => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token'); // Retrieve token here
+
+            if (!token) {
+                console.log("No token found");
+                return; // Early return if there's no token
+            }
+
             try {
-                const res = await axios.get(
-                    `${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,
-                    { 
-                        headers: {
-                            'Authorization': `Bearer ${token}` // Add token here
-                        },
-                        withCredentials: true // Ensure cookies are sent, if needed
-                    }
-                );
-                
+                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Send token in Authorization header
+                    },
+                    withCredentials: true, // If you're using cookies, keep this, otherwise remove it
+                });
+
                 if (res.data.success) {
-                    dispatch(setAllJobs(res.data.jobs)); // Update Redux state with jobs
+                    dispatch(setAllJobs(res.data.jobs));
                 }
             } catch (error) {
-                console.log("Error fetching jobs:", error);
-                if (error.response && error.response.status === 401) {
-                    console.log("Unauthorized: Please log in again.");
-                }
+                console.log(error);
             }
-        }
+        };
+
         fetchAllJobs();
-    },[])
-}
+    }, [searchedQuery, dispatch]); // Add searchedQuery and dispatch to dependencies array
+};
 
 export default useGetAllJobs;
 
