@@ -27,6 +27,16 @@ const JobDescription = () => {
                 },
                 withCredentials: true, // If you're using cookies, keep this, otherwise remove it
             });
+            console.log('Job application response:', response.data);
+    } catch (error) {
+        // Log error details for debugging
+        if (error.response) {
+            console.error('Error Response:', error.response.data);
+        } else {
+            console.error('Error:', error.message);
+        }
+    
+
             
             if(res.data.success){
                 setIsApplied(true); // Update the local state
@@ -35,10 +45,7 @@ const JobDescription = () => {
                 toast.success(res.data.message);
 
             }
-        } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message);
-        }
+        } 
     }
 
     useEffect(()=>{
