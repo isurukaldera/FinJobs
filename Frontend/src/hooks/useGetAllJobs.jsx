@@ -14,7 +14,11 @@ const useGetAllJobs = () => {
             try {
                 const res = await axios.get(
                     `${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,
-                    { withCredentials: true } // Ensures cookies are sent
+                    { headers: {
+                        'Authorization': `Bearer ${token}` // Add token here
+                    },
+                    withCredentials: true // Ensure cookies are still sent, if necessary
+                }  // Ensures cookies are sent
                 );
         
                 console.log("API Response:", res.data);
