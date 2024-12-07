@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-  origin: "https://finjobs.onrender.com", // Your frontend URL
+  origin: "https://finjobs.onrender.com", // Frontend URL
   credentials: true, // Allow sending cookies
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow Authorization header
 }));
