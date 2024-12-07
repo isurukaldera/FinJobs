@@ -13,14 +13,11 @@ const useGetAllJobs = () => {
         const fetchAllJobs = async () => {
             try {
                 const res = await axios.get(
-                    `${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, 
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,  // Attach the token in the Authorization header
-                        },
-                        withCredentials: true,  // Ensure credentials (cookies) are sent if needed
-                    }
+                    `${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,
+                    { withCredentials: true } // Ensures cookies are sent
                 );
+        
+                console.log("API Response:", res.data);
                 if (res.data.success) {
                     dispatch(setAllJobs(res.data.jobs));
                 }

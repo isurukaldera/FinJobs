@@ -16,6 +16,7 @@ const isAuthenticated = async (req, res, next) => {
                 success: false,
             });
         }
+        console.log("Authenticated User ID:", req.id);
         req.id = decode.userId; // Add the user ID to the request object
         next(); // Proceed to the next middleware/route
     } catch (error) {
