@@ -4,23 +4,14 @@ import { Job } from "../models/jobs.models.js";
 export const postJob = async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
-        const userId = req.userId; // Optional now
+        const userId = req.id;
 
         if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
             return res.status(400).json({
-                message: "Something is missing.",
+                message: "Somethin is missing.",
                 success: false
-            });
-        }
-
-        // You can either reject the request if `userId` is mandatory:
-        if (!userId) {
-            return res.status(401).json({
-                message: "User authentication is required to post a job.",
-                success: false
-            });
-        }
-
+            })
+        };
         const job = await Job.create({
             title,
             description,
@@ -31,58 +22,44 @@ export const postJob = async (req, res) => {
             experienceLevel: experience,
             position,
             company: companyId,
-            created_by: userId || null, // Null if no user ID
+            created_by: userId
         });
-
         return res.status(201).json({
             message: "New job created successfully.",
             job,
             success: true
         });
     } catch (error) {
-        console.error("Error in postJob:", error);
-        res.status(500).json({
-            message: "An error occurred while creating the job.",
-            success: false
-        });
+        console.log(error);
     }
-};
-
+}
 
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
-        console.log("Keyword received:", keyword);
-
         const query = {
             $or: [
                 { title: { $regex: keyword, $options: "i" } },
                 { description: { $regex: keyword, $options: "i" } },
             ]
         };
-        console.log("MongoDB Query:", query);
-
         const jobs = await Job.find(query).populate({
             path: "company"
         }).sort({ createdAt: -1 });
-
-        console.log("Jobs fetched:", jobs);
-
         if (!jobs) {
             return res.status(404).json({
                 message: "Jobs not found.",
                 success: false
-            });
+            })
         };
-
         return res.status(200).json({
             jobs,
             success: true
-        });
+        })
     } catch (error) {
-        console.error("Error in getAllJobs:", error);
+        console.log(error);
     }
-};
+}
 
 export const getJobById = async (req, res) => {
     try {
@@ -104,36 +81,22 @@ export const getJobById = async (req, res) => {
 
 export const getAdminJobs = async (req, res) => {
     try {
-        const adminId = req.userId; // Optional now
-
-        if (!adminId) {
-            return res.status(401).json({
-                message: "User authentication is required to access admin jobs.",
-                success: false
-            });
-        }
-
+        const adminId = req.id;
         const jobs = await Job.find({ created_by: adminId }).populate({
-            path: "company",
-        }).sort({ createdAt: -1 });
-
-        if (!jobs || jobs.length === 0) {
+            path:'company',
+            createdAt:-1
+        });
+        if (!jobs) {
             return res.status(404).json({
-                message: "No jobs found for the admin.",
+                message: "Jobs not found.",
                 success: false
-            });
-        }
-
+            })
+        };
         return res.status(200).json({
             jobs,
             success: true
-        });
+        })
     } catch (error) {
-        console.error("Error in getAdminJobs:", error);
-        res.status(500).json({
-            message: "An error occurred while fetching admin jobs.",
-            success: false
-        });
+        console.log(error);
     }
-};
-
+}
