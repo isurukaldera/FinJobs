@@ -16,13 +16,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: ["https://finjobs.onrender.com", "http://localhost:3000"], // Allow frontend URLs
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors({
+  origin: "https://finjobs.onrender.com", // Your frontend URL
+  credentials: true, // Allow sending cookies
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow Authorization header
+}));
 
 const PORT = process.env.PORT || 8000;
 
