@@ -91,18 +91,19 @@ export const login = async (req, res) => {
         }
 
         // Generate JWT token
-        const tokenData = { userId: user._id, role: user.role };
-        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const tokenData = {
+            userId: user._id
+        }
+        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
-        // Prepare user data for response
-        const userResponse = {
+        user = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
             phoneNumber: user.phoneNumber,
             role: user.role,
-            profile: user.profile,
-        };
+            profile: user.profile
+        }
         return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
             message: `Welcome back ${user.fullname}`,
             user,
