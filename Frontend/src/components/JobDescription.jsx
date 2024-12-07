@@ -5,14 +5,12 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from '../utils/constant';
 import { setSingleJob } from '../redux/jobSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 
 const JobDescription = () => {
     const { singleJob } = useSelector(store => store.job);
-    const { user } = useSelector(store => store.auth);
-    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
-    const [isApplied, setIsApplied] = useState(isIntiallyApplied);
+    const [isApplied, setIsApplied] = useState(false);
 
     const params = useParams();
     const jobId = params.id;
@@ -20,17 +18,17 @@ const JobDescription = () => {
 
     const applyJobHandler = async () => {
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`);
+            const res = await axios.post(`${APPLICATION_API_END_POINT}/apply/${jobId}`);
             
             if (res.data.success) {
                 setIsApplied(true); // Update the local state
-                const updatedSingleJob = { ...singleJob, applications: [...singleJob.applications, { applicant: user?._id }] }
+                const updatedSingleJob = { ...singleJob, applications: [...singleJob.applications, { applicant: "user_id_placeholder" }] }
                 dispatch(setSingleJob(updatedSingleJob)); // Helps us to real-time UI update
                 toast.success(res.data.message);
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Something went wrong.");
         }
     }
 
@@ -40,14 +38,14 @@ const JobDescription = () => {
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`);
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job));
-                    setIsApplied(res.data.job.applications.some(application => application.applicant === user?._id)); // Ensure the state is in sync with fetched data
+                    setIsApplied(res.data.job.applications.some(application => application.applicant === "user_id_placeholder")) // Replace with actual user check if needed
                 }
             } catch (error) {
                 console.log(error);
             }
-        }
+        };
         fetchSingleJob();
-    }, [jobId, dispatch, user?._id]);
+    }, [jobId, dispatch]);
 
     return (
         <div className='max-w-7xl mx-auto my-10 p-6 bg-white rounded-lg shadow-lg'>
