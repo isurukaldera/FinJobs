@@ -104,13 +104,12 @@ export const login = async (req, res) => {
             profile: user.profile,
         };
 
-        // Set token in a cookie
-        res.cookie("token", token, {
-            maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
-            httpOnly: true, // Prevent access from JavaScript
-            secure: process.env.NODE_ENV === 'production', // Secure only in production
-            sameSite: "strict", // Restrict cross-site access
-        });
+        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
+            message: `Welcome back ${user.fullname}`,
+            user,
+            success: true
+        })
+
 
         // Send token in the response body for frontend storage if needed
         return res.status(200).json({
