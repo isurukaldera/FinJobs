@@ -11,6 +11,10 @@ const isAuthenticated = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        console.log(decoded); 
+        if (!decoded || !decoded.userId) {
+            return res.status(401).json({ message: 'Unauthorized: User ID is missing.' });
+          }
         req.user = decoded;
         req.id = decoded._id; // Attach user ID explicitly
         next();
