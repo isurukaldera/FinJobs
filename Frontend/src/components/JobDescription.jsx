@@ -27,34 +27,34 @@ const JobDescription = () => {
             toast.error("Invalid Job ID. Please try again.");
             return;
         }
-
+    
         try {
             const url = `${APPLICATION_API_END_POINT}/apply/${jobId}`;
-            console.log('Applying to Job at URL:', url); // Debugging log
-
             const res = await axios.post(
                 url,
-                {}, // Add request body if required by backend
+                {}, // Request body (if required, add here)
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Send token in Authorization header
+                        Authorization: `Bearer ${token}`,
                     },
                     withCredentials: true,
                 }
             );
-
+    
             if (res.data.success) {
-                setIsApplied(true); // Update the local state
+                setIsApplied(true);
                 const updatedSingleJob = {
                     ...singleJob,
                     applications: [...singleJob.applications, { applicant: user?._id }],
                 };
-                dispatch(setSingleJob(updatedSingleJob)); // Helps to update UI in real time
+                dispatch(setSingleJob(updatedSingleJob));
                 toast.success(res.data.message);
             }
         } catch (error) {
-            console.error('Error applying to job:', error.response || error.message);
-            toast.error(error.response?.data?.message || 'Failed to apply for the job.');
+            console.error("Error applying to job:", error.response?.data || error.message);
+            toast.error(
+                error.response?.data?.message || "An error occurred while applying for the job."
+            );
         }
     };
 

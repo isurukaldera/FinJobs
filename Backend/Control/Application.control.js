@@ -3,10 +3,16 @@ import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
     try {
-        const userId = req.id; // Extract user ID from authenticated request
+        const userId = req.user?._id; // Ensure req.user is populated by middleware
         const jobId = req.params.id;
 
-        // Validate the job ID
+        if (!userId) {
+            return res.status(401).json({
+                message: "Unauthorized: User ID is missing.",
+                success: false,
+            });
+        }
+
         if (!jobId) {
             return res.status(400).json({
                 message: "Job ID is required.",
@@ -14,7 +20,7 @@ export const applyJob = async (req, res) => {
             });
         }
 
-        // Check if the job exists
+        // Check if job exists
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({
@@ -35,24 +41,23 @@ export const applyJob = async (req, res) => {
             });
         }
 
-        // Create a new application
+        // Create and associate the application
         const newApplication = await Application.create({
             job: jobId,
             applicant: userId,
-            status: "pending", // Assign a default status
+            status: "pending",
         });
 
-        // Associate the application with the job
         job.applications.push(newApplication._id);
         await job.save();
 
         return res.status(201).json({
             message: "Job applied successfully.",
             success: true,
-            application: newApplication, // Return the created application for reference
+            application: newApplication,
         });
     } catch (error) {
-        console.error("Error in applyJob:", error);
+        console.error("Error in applyJob:", error.message || error); // Log for debugging
         return res.status(500).json({
             message: "An error occurred while applying for the job.",
             success: false,
