@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import cors from "cors"; // Only one import for CORS is needed
+import cors from 'cors';// Only one import for CORS is needed
 import dotenv from "dotenv";
 import connectDB from "./DataU/DB.js";
 import userRouter from "./routes/user.route.js";
@@ -16,11 +16,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({
-  origin: "https://finjobs.onrender.com", // Frontend URL
-  credentials: true, // Allow sending cookies
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow Authorization header
-}));
+app.use(
+  cors({
+      origin: 'https://your-frontend-url.com', // Replace with your frontend URL
+      credentials: true, // Allow cookies to be sent
+  })
+);
   
 
 const PORT = process.env.PORT || 3000;
