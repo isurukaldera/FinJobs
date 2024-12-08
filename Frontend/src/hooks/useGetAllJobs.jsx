@@ -23,7 +23,7 @@ const useGetAllJobs = () => {
             }
 
             try {
-                const response = await axios.get(`${JOBS_API_END_POINT}/get`, {
+                const response = await axios.get(`${JOB_API_END_POINT}/get`, {
                     headers: {
                         Authorization: `Bearer ${token}`, // Add token to Authorization header
                     },
