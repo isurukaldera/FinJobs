@@ -3,12 +3,11 @@ import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
     try {
-        const userId = req.user?._id; // Ensure req.user is populated by middleware
-        const jobId = req.params.id;
+        const { userId, jobId } = req.body; // Extract userId and jobId from the request body
 
         if (!userId) {
-            return res.status(401).json({
-                message: "Unauthorized: User ID is missing.",
+            return res.status(400).json({
+                message: "User ID is required.",
                 success: false,
             });
         }
@@ -20,7 +19,7 @@ export const applyJob = async (req, res) => {
             });
         }
 
-        // Check if job exists
+        // Check if the job exists
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({
