@@ -12,31 +12,31 @@ const useGetAllJobs = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        
         const fetchJobs = async () => {
-            setLoading(true);
-            const token = localStorage.getItem('token'); // Retrieve token from localStorage
-
+            const token = localStorage.getItem('token'); // Get token from localStorage
+        
             if (!token) {
-                setError('No token found');
-                toast.error('Authentication token not found');
-                setLoading(false);
+                console.log('No token found');
                 return;
             }
-
+        
             try {
-                const response = await axios.get(`${JOB_API_END_POINT}/get`, {
+                const response = await axios.get('https://finjobs-1-backend.onrender.com/api/v1/job/get', {
                     headers: {
                         Authorization: `Bearer ${token}`, // Add token to Authorization header
                     },
-                    withCredentials: true,
+                    withCredentials: true, // Include credentials if required
                 });
-                setJobs(response.data); // Set the fetched jobs data
+        
+                console.log('Fetched jobs:', response.data);
             } catch (error) {
                 console.error('Error fetching jobs:', error);
-                setError(error.message || 'Failed to fetch jobs');
-                toast.error('Failed to fetch jobs');
-            } finally {
-                setLoading(false);
+                // Show specific error details
+                if (error.response) {
+                    console.error('Error Response:', error.response.data);
+                    console.error('Error Status:', error.response.status);
+                }
             }
         };
 

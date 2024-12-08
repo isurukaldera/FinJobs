@@ -37,17 +37,14 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Get token from localStorage
-    const token = localStorage.getItem('token');
-    
-    if (token) {
-      // Dispatch token to Redux store if it exists
-      dispatch(setToken(token));
+    const token = localStorage.getItem('token'); // Get token from localStorage
 
-      // Optionally, you can fetch user data here and dispatch it too
-      // Example: dispatch(setUser(userData));
+    if (token) {
+        // Dispatch token to Redux store if it exists
+        dispatch(setToken(token));  // Ensure your redux store is updated with the token
     }
-  }, [dispatch]);
+}, [dispatch]);
+
 
   return <RouterProvider router={router} />;
 }
