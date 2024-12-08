@@ -1,34 +1,31 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 const isAuthenticated = async (req, res, next) => {
     try {
-        // Get token from Authorization header (format: "Bearer <token>")
+        // Get token from Authorization header
         const token = req.headers.authorization?.split(' ')[1]; // "Bearer <token>"
 
-        console.log("Token received:", token); // Debug token existence
-
         if (!token) {
-            console.log("Missing authentication token!");
             return res.status(401).json({
-                message: "User not authenticated",
+                message: "Token not found. Please log in again.",
                 success: false,
             });
         }
 
-        // Verify the token using the secret key
+        // Verify the token
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        console.log("Decoded token:", decoded); // Debug token decoding
 
-        
-        // Attach user data (like userId) to the request object
-        req.userId = decoded.userId; // Ensure 'userId' is part of the token payload
-
-        // Continue with the request
+        // If token is valid, attach decoded user info to the request
+        req.userId = decoded.userId;
         next();
     } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({
+                message: "Token has expired. Please log in again.",
+                success: false,
+            });
+        }
         console.error("Authentication Error:", error);
-
-        // If the token is expired or invalid, it will throw an error
         return res.status(500).json({
             message: "An error occurred while verifying the token.",
             success: false,
