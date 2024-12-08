@@ -16,17 +16,10 @@ const isAuthenticated = async (req, res, next) => {
         }
 
         // Verify the token using the secret key
-        const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
         console.log("Decoded token:", decoded); // Debug token decoding
 
-        if (!decoded) {
-            console.log("Invalid token!");
-            return res.status(401).json({
-                message: "Invalid token",
-                success: false,
-            });
-        }
-
+        
         // Attach user data (like userId) to the request object
         req.userId = decoded.userId; // Ensure 'userId' is part of the token payload
 
