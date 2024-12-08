@@ -6,40 +6,30 @@ import { setAllJobs } from '../redux/jobSlice';
 
 
 const useGetAllJobs = () => {
-    const dispatch = useDispatch();
-    const {searchedQuery} = useSelector(store=>store.job);
-    useEffect(()=>{
-        const fetchAllJobs = async () => {
-            const token = localStorage.getItem('token'); // Retrieve token from localStorage
-        
-            if (!token) {
-                console.log('No token found');
-                return;
-            }
-        
-            console.log('Token being sent:', token); // Log token to verify it's correct
-        
+    const [jobs, setJobs] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchJobs = async () => {
+            const token = localStorage.getItem('token'); // Or wherever you store the token
             try {
                 const response = await axios.get('https://finjobs-1-backend.onrender.com/api/v1/job/get', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                    
                 });
-                
-        
-                console.log('Fetched jobs:', response.data);
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
-                if (error.response) {
-                    console.error('Error Response:', error.response.data);
-                    console.error('Error Status:', error.response.status);
-                }
+                setJobs(response.data.jobs);
+            } catch (err) {
+                setError(err.response?.data || err.message);
             }
         };
-        
-        fetchAllJobs(); // Test the function
-    },[])
-}
+
+        fetchJobs();
+    }, []);
+
+    return { jobs, error };
+};
+
+
 
 export default useGetAllJobs
