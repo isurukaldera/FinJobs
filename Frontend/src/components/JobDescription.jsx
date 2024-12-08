@@ -20,11 +20,7 @@ const JobDescription = () => {
 
     const applyJobHandler = async () => {
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                },
-                withCredentials: true,});
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`,);
             
             if(res.data.success){
                 setIsApplied(true); // Update the local state
