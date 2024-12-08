@@ -26,6 +26,9 @@ const useGetAllJobs = () => {
                     },
                     withCredentials: true, // Include credentials if needed
                 });
+                if(res.data.success){
+                    dispatch(setAllJobs(res.data.jobs));
+                }
         
                 console.log('Fetched jobs:', response.data);
             } catch (error) {
