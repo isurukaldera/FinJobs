@@ -3,8 +3,12 @@ import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
     try {
-        const userId = req.user?._id; // Ensure req.user is populated by middleware
+        const userId = req.userId; 
+        console.log("Incoming request for job ID:", jobId, "from user:", userId);
+// Ensure req.userId is populated by middleware
         const jobId = req.params.id;
+
+        console.log("User ID:", userId, "Job ID:", jobId); // Debug user and job IDs
 
         if (!userId) {
             return res.status(401).json({
@@ -41,15 +45,18 @@ export const applyJob = async (req, res) => {
             });
         }
 
-        // Create and associate the application
+        // Create a new application
         const newApplication = await Application.create({
             job: jobId,
             applicant: userId,
             status: "pending",
         });
 
+        // Link application to the job
         job.applications.push(newApplication._id);
         await job.save();
+
+        console.log("Application created:", newApplication); // Debug application creation
 
         return res.status(201).json({
             message: "Job applied successfully.",
@@ -65,11 +72,13 @@ export const applyJob = async (req, res) => {
     }
 };
 
+
 export const getAppliedJobs = async (req, res) => {
     try {
-        const userId = req.id;
+        const userId = req.userId;
 
-        // Fetch all applications for the user, sorted by date
+        console.log("Fetching applied jobs for user ID:", userId); // Debug userId
+
         const applications = await Application.find({ applicant: userId })
             .sort({ createdAt: -1 })
             .populate({
@@ -91,7 +100,7 @@ export const getAppliedJobs = async (req, res) => {
             success: true,
         });
     } catch (error) {
-        console.error("Error in getAppliedJobs:", error);
+        console.error("Error in getAppliedJobs:", error); // Log errors
         return res.status(500).json({
             message: "An error occurred while fetching applied jobs.",
             success: false,
@@ -99,11 +108,13 @@ export const getAppliedJobs = async (req, res) => {
     }
 };
 
+
 export const getApplicants = async (req, res) => {
     try {
         const jobId = req.params.id;
 
-        // Check if the job exists and fetch applicants
+        console.log("Fetching applicants for job ID:", jobId); // Debug jobId
+
         const job = await Job.findById(jobId).populate({
             path: "applications",
             populate: {
@@ -123,7 +134,7 @@ export const getApplicants = async (req, res) => {
             success: true,
         });
     } catch (error) {
-        console.error("Error in getApplicants:", error);
+        console.error("Error in getApplicants:", error); // Log errors
         return res.status(500).json({
             message: "An error occurred while fetching applicants.",
             success: false,
@@ -131,12 +142,14 @@ export const getApplicants = async (req, res) => {
     }
 };
 
+
 export const updateStatus = async (req, res) => {
     try {
         const { status } = req.body;
         const applicationId = req.params.id;
 
-        // Validate the status field
+        console.log("Updating status for application ID:", applicationId, "New status:", status); // Debug data
+
         const validStatuses = ["pending", "approved", "rejected"];
         if (!status || !validStatuses.includes(status.toLowerCase())) {
             return res.status(400).json({
@@ -145,7 +158,6 @@ export const updateStatus = async (req, res) => {
             });
         }
 
-        // Check if the application exists
         const application = await Application.findById(applicationId);
         if (!application) {
             return res.status(404).json({
@@ -154,19 +166,21 @@ export const updateStatus = async (req, res) => {
             });
         }
 
-        // Update the application status
         application.status = status.toLowerCase();
         await application.save();
+
+        console.log("Status updated for application:", application); // Debug updated application
 
         return res.status(200).json({
             message: "Status updated successfully.",
             success: true,
         });
     } catch (error) {
-        console.error("Error in updateStatus:", error);
+        console.error("Error in updateStatus:", error); // Log errors
         return res.status(500).json({
             message: "An error occurred while updating the status.",
             success: false,
         });
     }
 };
+
