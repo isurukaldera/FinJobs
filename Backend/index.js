@@ -19,7 +19,8 @@ app.use(cookieParser());
 
 // CORS Configuration
 const corsOptions = {
-  origin: ["https://finjobs.onrender.com"], // Frontend URL
+  origin: ["https://finjobs.onrender.com"],
+  allowedHeaders: ['Content-Type', 'Authorization'], // Frontend URL
   methods: "GET,POST,PUT,DELETE",
   credentials: true, // Allow cookies if needed
 };

@@ -24,7 +24,7 @@ const useGetAllJobs = () => {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                    withCredentials: true, // Include credentials if needed
+                    
                 });
                 
         
