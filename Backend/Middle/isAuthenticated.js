@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 
 const isAuthenticated = async (req, res, next) => {
     try {
-        const token = req.cookies.token; // Get token from cookies
+        // Get token from Authorization header (format: "Bearer <token>")
+        const token = req.headers.authorization?.split(' ')[1]; // "Bearer <token>"
+
         console.log("Token received:", token); // Debug token existence
 
         if (!token) {
@@ -13,6 +15,7 @@ const isAuthenticated = async (req, res, next) => {
             });
         }
 
+        // Verify the token using the secret key
         const decoded = await jwt.verify(token, process.env.SECRET_KEY);
         console.log("Decoded token:", decoded); // Debug token decoding
 
@@ -24,11 +27,15 @@ const isAuthenticated = async (req, res, next) => {
             });
         }
 
-        console.log("User ID from token:", req.userId);
-        req.userId = decoded.userId; // Attach userId to request
+        // Attach user data (like userId) to the request object
+        req.userId = decoded.userId; // Ensure 'userId' is part of the token payload
+
+        // Continue with the request
         next();
     } catch (error) {
         console.error("Authentication Error:", error);
+
+        // If the token is expired or invalid, it will throw an error
         return res.status(500).json({
             message: "An error occurred while verifying the token.",
             success: false,
