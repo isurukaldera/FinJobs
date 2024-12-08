@@ -15,7 +15,7 @@ const useGetAllJobs = () => {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     },
-                    });
+                    withCredentials: true,});
                 if(res.data.success){
                     dispatch(setAllJobs(res.data.jobs));
                 }
