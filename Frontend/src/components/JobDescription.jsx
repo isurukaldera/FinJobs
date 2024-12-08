@@ -20,22 +20,25 @@ const JobDescription = () => {
 
     const applyJobHandler = async () => {
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                },
-                withCredentials: true,});
-            
-            if(res.data.success){
+            const res = await axios.post(
+                `${APPLICATION_API_END_POINT}/apply/${jobId}`,
+                {
+                    userId: user?._id, // Pass user ID in the request body
+                }
+            );
+        
+            if (res.data.success) {
                 setIsApplied(true); // Update the local state
-                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?._id}]}
-                dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
+                const updatedSingleJob = {
+                    ...singleJob,
+                    applications: [...singleJob.applications, { applicant: user?._id }],
+                };
+                dispatch(setSingleJob(updatedSingleJob)); // Helps us to update UI in real-time
                 toast.success(res.data.message);
-
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "An error occurred.");
         }
     }
 
