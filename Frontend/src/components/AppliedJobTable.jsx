@@ -7,9 +7,7 @@ import useGetAppliedJobs from '../hooks/useGetAppliedJobs';
 
 
 const AppliedJobTable = () => {
-  useGetAppliedJobs(); // Fetch applied jobs data
-
-  const { allAppliedJobs = [] } = useSelector(store => store.job);
+  const {allAppliedJobs} = useSelector(store=>store.job);
 
   return (
     <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
