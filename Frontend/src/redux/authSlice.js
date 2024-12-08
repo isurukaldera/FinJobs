@@ -1,33 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
-    name: "auth",
+    name: 'auth',
     initialState: {
-        loading: false,
-        user: null,
-        token: localStorage.getItem("token") || null, // Retrieve token from localStorage
-        isAuthenticated: !!localStorage.getItem("token"), // Boolean flag indicating if the user is authenticated
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      loading: false,
     },
     reducers: {
-        // actions
-        setLoading: (state, action) => {
-            state.loading = action.payload;
-        },
-        setUser: (state, action) => {
-            state.user = action.payload;
-            state.isAuthenticated = true; // Set as authenticated when user info is available
-        },
-        setToken: (state, action) => {
-            state.token = action.payload;
-            state.isAuthenticated = true; // User is authenticated after receiving the token
-        },
-        logout: (state) => {
-            state.user = null;
-            state.token = null;
-            state.isAuthenticated = false; // Reset state when logging out
-        },
+      setUser: (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      },
+      setToken: (state, action) => {
+        state.token = action.payload;
+        state.isAuthenticated = true; // Assuming the token implies authentication
+      },
+      setLoading: (state, action) => {
+        state.loading = action.payload;
+      },
+      logout: (state) => {
+        state.token = null;
+        state.user = null;
+        state.isAuthenticated = false;
+      },
     },
-});
-
-export const { setLoading, setUser, setToken, logout } = authSlice.actions;
-export default authSlice.reducer;
+  });
+  
+  export const { setUser, setToken, setLoading, logout } = authSlice.actions;
+  export default authSlice.reducer;
