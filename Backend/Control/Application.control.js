@@ -3,14 +3,11 @@ import { Job } from "../models/jobs.models.js";
 
 export const applyJob = async (req, res) => {
     try {
-        const userId = req.userId; 
-        console.log("Incoming request for job ID:", jobId, "from user:", userId);
-// Ensure req.userId is populated by middleware
+        const userId = req.user?._id; // Ensure req.user is populated by middleware
         const jobId = req.params.id;
 
-        console.log("User ID:", userId, "Job ID:", jobId); // Debug user and job IDs
-
         if (!userId) {
+            res.setHeader("Access-Control-Allow-Origin", "https://finjobs.onrender.com");
             return res.status(401).json({
                 message: "Unauthorized: User ID is missing.",
                 success: false,
@@ -18,6 +15,7 @@ export const applyJob = async (req, res) => {
         }
 
         if (!jobId) {
+            res.setHeader("Access-Control-Allow-Origin", "https://finjobs.onrender.com");
             return res.status(400).json({
                 message: "Job ID is required.",
                 success: false,
@@ -27,6 +25,7 @@ export const applyJob = async (req, res) => {
         // Check if job exists
         const job = await Job.findById(jobId);
         if (!job) {
+            res.setHeader("Access-Control-Allow-Origin", "https://finjobs.onrender.com");
             return res.status(404).json({
                 message: "Job not found.",
                 success: false,
@@ -39,25 +38,24 @@ export const applyJob = async (req, res) => {
             applicant: userId,
         });
         if (existingApplication) {
+            res.setHeader("Access-Control-Allow-Origin", "https://finjobs.onrender.com");
             return res.status(400).json({
                 message: "You have already applied for this job.",
                 success: false,
             });
         }
 
-        // Create a new application
+        // Create and associate the application
         const newApplication = await Application.create({
             job: jobId,
             applicant: userId,
             status: "pending",
         });
 
-        // Link application to the job
         job.applications.push(newApplication._id);
         await job.save();
 
-        console.log("Application created:", newApplication); // Debug application creation
-
+        res.setHeader("Access-Control-Allow-Origin", "https://finjobs.onrender.com");
         return res.status(201).json({
             message: "Job applied successfully.",
             success: true,
@@ -65,12 +63,14 @@ export const applyJob = async (req, res) => {
         });
     } catch (error) {
         console.error("Error in applyJob:", error.message || error); // Log for debugging
+        res.setHeader("Access-Control-Allow-Origin", "https://finjobs.onrender.com");
         return res.status(500).json({
             message: "An error occurred while applying for the job.",
             success: false,
         });
     }
 };
+
 
 
 export const getAppliedJobs = async (req, res) => {

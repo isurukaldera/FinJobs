@@ -20,7 +20,6 @@ const JobDescription = () => {
 
     const applyJobHandler = async () => {
         try {
-            console.log("Applying for Job ID:", jobId);
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
             
             if(res.data.success){
@@ -30,7 +29,6 @@ const JobDescription = () => {
                 toast.success(res.data.message);
 
             }
-            console.log("Apply Job Response:", res.data);
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message);
