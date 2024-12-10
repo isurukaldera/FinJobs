@@ -4,12 +4,23 @@ to install the project locally
 $ npm install
 $ npm run dev
 
+
 For my final project, I developed Finjob for students and recruiters, a job portal that allows to view job 
 listings, apply for jobs, and manage applications. The project uses React.js for the 
 frontend, Express for the backend, Postman for API communication, and MongoDB as 
 the database.
 
 ##The website experienced slower-than-expected load times after deployment.##
+##Problem Statement##
+The web application has authentication-related issues affecting its functionality. Currently, only the following features are operational after successful authentication:
+
+Signup: Users can register to create an account.
+Login: Users can log in to the system.
+View Job Details: Users can browse and view job details once logged in.
+Filter Jobs: Users can filter job listings based on criteria.
+Update User Details: Users can modify their personal information.****
+
+
 
 User Manual / Walkthrough
 Welcome to our Job Portal! Thank you for visiting. We have created this guide to assist you in navigating the website and utilizing its features to their fullest potential.
